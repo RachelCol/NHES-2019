@@ -5,7 +5,6 @@
 # pfi_pu_pert$ALLGRADEX <- c(pfi_pu_pert$ALLGRADEX -3)
 # pfi_pu_pert$ALLGRADEX[pfi_pu_pert$ALLGRADEX == -1] <- 0
 
-
 # Create homeschool data subset
 HSData <- subset(pfi_pu_pert, HOMESCHLX == 1)
 # Remove students who "attend" school 25 hours or more
