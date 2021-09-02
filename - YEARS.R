@@ -305,37 +305,8 @@ LAT <- subset(HOME, ALWAYS == 0)
 # English or no
  wpct(ALW$english_or_no, weight=ALW$FPWT, na.rm= TRUE)
  wpct(LAT$english_or_no, weight=LAT$FPWT, na.rm= TRUE)
-
  
-# DELETE
-# SECONDARY SCHOOL AWLAYS HOMESCHOOLERS V FIRST TIME HOMESCHOOLERS
- ALW <- subset(HOME, ALWAYS == 1 & elementary_secondary == 2)
- SOM <- subset(HOME, ALWAYS == 0 & FIRST == 2 & elementary_secondary == 2)
- LAT <- subset(HOME, FIRST == 1 & elementary_secondary == 2)
-# Bachelor's degree or no
- wpct(ALW$ba_no_ba, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$ba_no_ba, weight=LAT$FPWT, na.rm= TRUE)
-# White or minority
- wpct(ALW$white_nonwhite, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$white_nonwhite, weight=LAT$FPWT, na.rm= TRUE)
-# Two parent or single parent
- wpct(ALW$two_parent_or_single, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$two_parent_or_single, weight=LAT$FPWT, na.rm= TRUE)
-# Stay at home parent or no
- wpct(ALW$sahp, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$sahp, weight=LAT$FPWT, na.rm= TRUE)
-# Income over 50K or under 50K
- wpct(ALW$income, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$income, weight=LAT$FPWT, na.rm= TRUE)
-# Food stamps or no
- wpct(ALW$food_stamps, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$food_stamps, weight=LAT$FPWT, na.rm= TRUE)
-# English or no
- wpct(ALW$english_or_no, weight=ALW$FPWT, na.rm= TRUE)
- wpct(LAT$english_or_no, weight=LAT$FPWT, na.rm= TRUE)
- # END DELETE
- 
- # SECONDARY SCHOOL AWLAYS HOMESCHOOLERS V FIRST TIME HOMESCHOOLERS
+ # SECONDARY SCHOOL AWLAYS HOMESCHOOLERS V SOME TIME V FIRST TIME HOMESCHOOLERS
  ALW <- subset(HOME, ALWAYS == 1 & elementary_secondary == 2)
  SOM <- subset(HOME, ALWAYS == 0 & FIRST == 0 & elementary_secondary == 2)
  LAT <- subset(HOME, FIRST == 1 & elementary_secondary == 2)
@@ -383,5 +354,43 @@ wpct(NoE$TOTAL, weight=NoE$FPWT, na.rm = TRUE)
 svyby(~english_or_no == 1, ~(elementary_secondary == 2 & FIRST == 1), 
       HOMEdesign, 
       svymean, vartype="ci")
+
+
+# START BY CREATING A CHART SHOWING HOW DIFFERENT OVERALL
+# FIRST YEAR HOMESCHOOLERS ARE, AND WRITING ABOUT WHY
+
+# HOW DIFFERENT ARE FIRST-YEAR HOMESCHOOLERS?
+ALW <- subset(HOME, ALWAYS == 1)
+SOM <- subset(HOME, ALWAYS == 0 & FIRST == 0)
+LAT <- subset(HOME, FIRST == 1)
+# Bachelor's degree or no
+wpct(ALW$ba_no_ba, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$ba_no_ba, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$ba_no_ba, weight=LAT$FPWT, na.rm= TRUE)
+# White or minority
+wpct(ALW$white_nonwhite, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$white_nonwhite, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$white_nonwhite, weight=LAT$FPWT, na.rm= TRUE)
+# Two parent or single parent
+wpct(ALW$two_parent_or_single, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$two_parent_or_single, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$two_parent_or_single, weight=LAT$FPWT, na.rm= TRUE)
+# Stay at home parent or no
+wpct(ALW$sahp, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$sahp, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$sahp, weight=LAT$FPWT, na.rm= TRUE)
+# Income over 50K or under 50K
+wpct(ALW$income, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$income, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$income, weight=LAT$FPWT, na.rm= TRUE)
+# Food stamps or no
+wpct(ALW$food_stamps, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$food_stamps, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$food_stamps, weight=LAT$FPWT, na.rm= TRUE)
+# English or no
+wpct(ALW$english_or_no, weight=ALW$FPWT, na.rm= TRUE)
+wpct(SOM$english_or_no, weight=SOM$FPWT, na.rm= TRUE)
+wpct(LAT$english_or_no, weight=LAT$FPWT, na.rm= TRUE)
+
 
 # END SCRIPT

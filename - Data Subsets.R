@@ -23,6 +23,7 @@
 # install.packages("Hmisc")
 # install.packages("foreign")
 # install.packages("weights")
+install.packages("tibble")
 # remotes::install_github("carlganz/svrepmisc")
 
 library("tables")
@@ -36,6 +37,7 @@ library("Hmisc")
 library("foreign")
 library("weights")
 library("svrepmisc")
+library("tibble")
 
 load(file = "pfi_pu_pert.RData")
 
@@ -199,21 +201,6 @@ PFI$food_stamps <- ifelse(PFI$HFOODST == 1, 1, 2)
 PFI$disability <- ifelse((PFI$HSDISABLX == 1), 1, 
                      ifelse((PFI$HSILLX == 1), 1,
                          ifelse((PFI$HSSPCLNDX == 1), 1, 2)))
-
-# Edit columns for grades students have been homeschooled in,
-# turning "2" for "no" into "0" to allow for addition later.
-PFI$HOME1[PFI$HOME1 == 2] <- 0
-PFI$HOME2[PFI$HOME2 == 2] <- 0
-PFI$HOME3[PFI$HOME3 == 2] <- 0
-PFI$HOME4[PFI$HOME4 == 2] <- 0
-PFI$HOME5[PFI$HOME5 == 2] <- 0
-PFI$HOME6[PFI$HOME6 == 2] <- 0
-PFI$HOME7[PFI$HOME7 == 2] <- 0
-PFI$HOME8[PFI$HOME8 == 2] <- 0
-PFI$HOME9[PFI$HOME9 == 2] <- 0
-PFI$HOME10[PFI$HOME10 == 2] <- 0
-PFI$HOME11[PFI$HOME11 == 2] <- 0
-PFI$HOME12[PFI$HOME12 == 2] <- 0
 
 # May want to add a column comparing virtual v. non-virtual
 
