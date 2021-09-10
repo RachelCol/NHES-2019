@@ -23,7 +23,9 @@
 # install.packages("Hmisc")
 # install.packages("foreign")
 # install.packages("weights")
-install.packages("tibble")
+# install.packages("tibble")
+# install.packages("ggplot2")
+# install.packages("xlsx")
 # remotes::install_github("carlganz/svrepmisc")
 
 library("tables")
@@ -38,6 +40,8 @@ library("foreign")
 library("weights")
 library("svrepmisc")
 library("tibble")
+library("ggplot2")
+library("xlsx")
 
 load(file = "pfi_pu_pert.RData")
 
@@ -91,8 +95,11 @@ table(PFI$SCHTYPE)
 # PFI$EDCHSFL == 1 & PFI$HOMESCHLX == 1 & (PFI$SCHLHRSWK != 4 | is.na(PFI$SCHLHRSWK):
 #      1 = 13882, 2 = 1736, 3 = 496, 4 = 250
 
-# Cheeck grade level counts (should be grades 0 through 12)
+# Check grade level counts (should be grades 0 through 12)
 table(PFI$ALLGRADEX)
+
+# Create dataset with K in it, for "Years" analysis
+PFIwK <- PFI
 
 # Remove all rows where ALLGRADEX = 0 (i.e., remove kindergarten from analysis)
 PFI <- PFI[ which(PFI$ALLGRADEX > 0), ]
