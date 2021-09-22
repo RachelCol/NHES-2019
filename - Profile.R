@@ -1,10 +1,109 @@
 # Create a profile of an individual student
+# Goal here is to explain reasoning behind excluding kindergarten
+
+PFIwKHS <- subset(PFIwK, SCHTYPE == 3)
+PFIHS <- subset(PFI, SCHTYPE == 3)
+
+mean(PFIwKHS$FPWT)
+mean(PFIwK$FPWT)
+max(PFIwK$FPWT)
+
+subset(PFIwK, FPWT > 50,000)
+
+max(PFIwK$FPWT[PFIwKHS$ALLGRADEX == 1])
+
+WEIGHTS <- c(1:4)
+WEIGHTS <- as.data.frame(WEIGHTS)
+
+WEIGHTS$GK <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 0]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 0])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 0])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 0])/
+                  sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 0])*100)))
+WEIGHTS$G1 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 1]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 1])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 1])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 1])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 1])*100)))
+WEIGHTS$G2 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 2]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 2])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 2])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 2])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 2])*100)))
+WEIGHTS$G3 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 3]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 3])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 3])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 3])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 3])*100)))
+WEIGHTS$G4 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 4]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 4])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 4])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 4])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 4])*100)))
+WEIGHTS$G5 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 5]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 5])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 5])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 5])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 5])*100)))
+WEIGHTS$G6 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 6]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 6])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 6])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 6])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 6])*100)))
+WEIGHTS$G7 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 7]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 7])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 7])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 7])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 7])*100)))
+WEIGHTS$G8 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 8]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 8])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 8])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 8])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 8])*100)))
+WEIGHTS$G9 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 9]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 9])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 9])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 9])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 9])*100)))
+WEIGHTS$G10 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 10]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 10])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 10])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 10])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 10])*100)))
+WEIGHTS$G11 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 11]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 11])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 11])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 11])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 11])*100)))
+WEIGHTS$G12 <- c(sum(PFIwKHS$countn[PFIwKHS$ALLGRADEX == 12]), 
+                round(sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 12])),
+                round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 12])), 
+                (round(max(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 12])/
+                         sum(PFIwKHS$FPWT[PFIwKHS$ALLGRADEX == 12])*100)))
+
+WEIGHTS$WEIGHTS <- NULL
+WEIGHTS <- t(WEIGHTS)
+colnames(WEIGHTS) <- c("Count", "Weighted Total", "Max Weight", "Percent")
+
+print(WEIGHTS)
+
+write.csv(WEIGHTS,"/Users/Rachel/R-Projects/NHES-2019/WEIGHTS.csv", row.names = TRUE)
+
+
+# Weight Tables: 
+# print(AllWeight)
+# print(HSWeight)
+# print(PublicWeight)
+# print(PrivateWeight)
+# print(VirtualWeight)
+
+
 
 # set which grade to examine
-PFIgrade <- subset(PFI, ALLGRADEX == 12 & SCHTYPE == 3)
+PFIgrade <- subset(PFIwK, ALLGRADEX == 0 & SCHTYPE == 3)
 
 # creates matrix "examine" for the max weighted child in that grade
-examine <- PFIgrade[(which.min(PFIgrade$FPWT)), ]
+examine <- PFIgrade[(which.max(PFIgrade$FPWT)), ]
 
 # START HERE
 PROFILE <- matrix(1, 2)
@@ -27,7 +126,21 @@ PROFILE$RACEETH <- c("Child's race/ethnicity",
 
 # Child's age
 PROFILE$AGE2018 <- c("Age as of Dec. 31, 2018", sum(examine$AGE2018))
-
+PROFILE$BIRTHMONTH <- c("Birth Month", 
+                        (ifelse(examine$CDOBMM == 1, "January", 
+                         ifelse(examine$CDOBMM == 2, "February", 
+                         ifelse(examine$CDOBMM == 3, "March", 
+                         ifelse(examine$CDOBMM == 4, "April", 
+                         ifelse(examine$CDOBMM == 5, "May", 
+                         ifelse(examine$CDOBMM == 6, "June", 
+                         ifelse(examine$CDOBMM == 7, "July", 
+                         ifelse(examine$CDOBMM == 8, "August", 
+                         ifelse(examine$CDOBMM == 9, "September", 
+                         ifelse(examine$CDOBMM == 10, "October", 
+                         ifelse(examine$CDOBMM == 11, "November", 
+                         ifelse(examine$CDOBMM == 12, "December",                                                             
+                                   NA))))))))))))))
+                  
 # Child's grade
 PROFILE$ALLGRADEX <- c("child's current grade", sum(examine$ALLGRADEX))
 
@@ -105,7 +218,7 @@ PROFILE$HHUNDR18X <- c("Children under 18", (ifelse(examine$HHUNDR18X == 0, prin
                                                                                 ifelse(examine$HHUNDR18X == 5, print("5 children under 18"), NA))))))))
 
 if(is.na(examine$CHAGE1) == TRUE) {
-PROFILE$NOSIB <- c("no siblings", "The child has no siblings")
+PROFILE$NOSIB <- c("no siblings", "The child has no siblings under age 21")
 }else{
   print("")
 }
@@ -508,10 +621,12 @@ t(PROFILE)
 
 # NARRATIVE
 
-test <- paste("The child is ", PROFILE$RACEETH[2], " ", PROFILE$CSEX[2], ". The child was ", PROFILE$AGE2018[2], 
-      " years old on December 31st, 2018, and is in grade ", PROFILE$ALLGRADEX[2], ". ", 
-      "The family’s questionnaire was completed ", PROFILE$ENGLSPANX[2], " and ", PROFILE$MODECOMP[2], ". ", 
-      "There are ", PROFILE$HHTOTALXX[2], " people living in the household. The child lives with ", 
+test <- paste("The child is ", PROFILE$RACEETH[2], " ", PROFILE$CSEX[2], ". The child was ", 
+      PROFILE$AGE2018[2], " years old on December 31st, 2018, has a birthday in ", 
+      PROFILE$BIRTHMONTH[2], ", and is in grade ", PROFILE$ALLGRADEX[2], ". ", 
+      "The family’s questionnaire was completed ", PROFILE$ENGLSPANX[2], " and ", 
+      PROFILE$MODECOMP[2], ". ", "There are ", PROFILE$HHTOTALXX[2], 
+      " people living in the household. The child lives with ", 
       PROFILE$FAMILY19_BRD[2], ": ", PROFILE$HHMOM[2], PROFILE$HHDAD[2], PROFILE$HHSISSX[2], 
       ", and ", PROFILE$HHBROSX[2], ". ", "The child's siblings are: ", PROFILE$NOSIB[2], PROFILE$CHAGE1[2], PROFILE$CHSEX1[2], 
       PROFILE$CHENRL1[2], PROFILE$CHAGE2[2], PROFILE$CHSEX2[2], PROFILE$CHENRL2[2], PROFILE$CHAGE3[2], 
@@ -528,7 +643,7 @@ test <- paste("The child is ", PROFILE$RACEETH[2], " ", PROFILE$CSEX[2], ". The 
       PROFILE$ZIP18PO2[2], " of families with children under 18 live below the poverty line, and ", 
       PROFILE$ZIPBLHI2[2]," of people are Black or Hispanic. The respondents ", PROFILE$OWNRNTHB[2],
       " and ", PROFILE$WELFARE[2], ". The family's total income is ", PROFILE$TTLHHINC[2], ".", "\n", "\n",
-  "The child is being homeschooled for the following reasons:", PROFILE$HSSAFETYX[2], PROFILE$HSDISSATX[2], 
+  "The child is being homeschooled for the following reasons: ", PROFILE$HSSAFETYX[2], PROFILE$HSDISSATX[2], 
       PROFILE$HSRELGON[2], PROFILE$HSMORAL[2], PROFILE$disability[2], PROFILE$HSALTX[2], PROFILE$HSFMLY[2], 
       PROFILE$HSBULLY[2], PROFILE$HSOTHERX[2], PROFILE$NOREASON[2], ". ", 
       "The family's most important reason for homsechooling is: ", PROFILE$HSMOSTX[2], ". ", 
@@ -543,5 +658,13 @@ test <- paste("The child is ", PROFILE$RACEETH[2], " ", PROFILE$CSEX[2], ". The 
       sep = '')
 
 cat(test)
+
+sum(examine$HSWHOX) # child is homeschooled by
+sum(examine$HSTUTOR) # child has a tutor
+sum(examine$HSCOOP) # instruction provided by a coop
+examine$HSOTHERXOS
+
+
+table(PFIwKHS$AGE2018)
 
 

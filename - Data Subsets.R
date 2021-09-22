@@ -140,9 +140,9 @@ PFI$two_parent_or_single <- ifelse(PFI$HHPARN19_BRD == 1, 1, 2)
    # (2) part-time (less than 40hrs); 
    # (3) not in the workforce.
 PFI$full_part1 <- ifelse((PFI$P1HRSWK >= 40), 1, 
-                   ifelse((PFI$P1HRSWK >= 0), 2, 3))
+                   ifelse((PFI$P1HRSWK < 40), 2, 3))
 PFI$full_part2 <- ifelse((PFI$P2HRSWK >= 40), 1, 
-                   ifelse((PFI$P2HRSWK >= 20), 2, 3))
+                   ifelse((PFI$P2HRSWK < 40), 2, 3))
 # Lastly, turn NAs (i.e. not in the workforce) into 3s.
 PFI[c(839, 840)][is.na(PFI[c(839, 840)])] <- 3
 # NOTE: DO NOT add any new columns before this entry! That would break this!!
