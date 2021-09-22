@@ -84,7 +84,7 @@ PFI$SCHTYPE <- ifelse(PFI$EDCHSFL == 1 & PFI$HOMESCHLX == 1 & (
 # Remove all rows where SCHTYPE == 5.
 PFI <- PFI[ which(PFI$SCHTYPE < 5), ]
 
-# check work using table(should be: 13882, 1736, 496, 250)
+# check work using table (should be: 13882, 1736, 496, 250)
 table(PFI$SCHTYPE)
 
 # ON DETERMINING which students are homeschooled (lines 48 to 54):
@@ -98,21 +98,28 @@ table(PFI$SCHTYPE)
 # Check grade level counts (should be grades 0 through 12)
 table(PFI$ALLGRADEX)
 
-# Create dataset with K in it, for "Years" analysis
-PFIwK <- PFI
+# Add a "counts" column
+PFI$countn <- c(1)
 
-# Remove all rows where ALLGRADEX = 0 (i.e., remove kindergarten from analysis)
-PFI <- PFI[ which(PFI$ALLGRADEX > 0), ]
+# Remove children under age 5 or over age 18
+table(PFI$AGE2018)
+PFI <- PFI[!(PFI$AGE2018 == 3 | PFI$AGE2018 == 4 | PFI$AGE2018 == 19 | PFI$AGE2018 == 20),]
+table(PFI$AGE2018)
 
 # Check grade level counts (should be grades 1 through 12)
 table(PFI$ALLGRADEX)
 
-# Add a "counts" column
-PFI$countn <- c(1)
-
 # Create column with: homeschool (1) or public school (2)
 PFI$home_public <- ifelse(PFI$SCHTYPE == 3, 1, 
                           ifelse(PFI$SCHTYPE == 1, 2, NA))
+
+# Create column with: homeschool (1) or private school (2)
+PFI$home_private <- ifelse(PFI$SCHTYPE == 3, 1, 
+                          ifelse(PFI$SCHTYPE == 2, 2, NA))
+
+# Create column with: homeschool (1) or virtual school (2)
+PFI$home_virtual <- ifelse(PFI$SCHTYPE == 3, 1, 
+                          ifelse(PFI$SCHTYPE == 4, 2, NA))
 
 # Create column with: white (1) or non-white (2)
 PFI$white_nonwhite <- ifelse(PFI$RACEETH == 1, 1, 2)
@@ -120,26 +127,29 @@ PFI$white_nonwhite <- ifelse(PFI$RACEETH == 1, 1, 2)
 # Create column with: BA (1) or no BA (2)
 PFI$ba_no_ba <- ifelse(PFI$PARGRADEX > 3, 1, 2)
 
-# Create column with: grades 1-6 (1) or grades 7-12 (2)
+# Create column with: grades K-6 (1) or grades 7-12 (2)
 PFI$elementary_secondary <- ifelse(PFI$ALLGRADEX < 7, 1, 2)
 
 # Create column with: two-parent household (1) or single parent (2)
 PFI$two_parent_or_single <- ifelse(PFI$HHPARN19_BRD == 1, 1, 2)
 
-# Create collection of columns on parents' employement status
+# Create collection of columns on parents' employment status
 
 # First, create columns for each parent, with: 
    # (1) full time (at least 40hrs); 
    # (2) part-time (less than 40hrs); 
    # (3) not in the workforce.
 PFI$full_part1 <- ifelse((PFI$P1HRSWK >= 40), 1, 
-                   ifelse((PFI$P1HRSWK >= 0), 2, NA))
+                   ifelse((PFI$P1HRSWK >= 0), 2, 3))
 PFI$full_part2 <- ifelse((PFI$P2HRSWK >= 40), 1, 
-                   ifelse((PFI$P2HRSWK >= 20), 2, NA))
+                   ifelse((PFI$P2HRSWK >= 20), 2, 3))
 # Lastly, turn NAs (i.e. not in the workforce) into 3s.
-PFI[c(837, 838)][is.na(PFI[c(837, 838)])] <- 3
+PFI[c(839, 840)][is.na(PFI[c(839, 840)])] <- 3
 # NOTE: DO NOT add any new columns before this entry! That would break this!!
-# Columns full_part1 and full_part2 should be columns 837 and 838.
+# Columns full_part1 and full_part2 should be columns 839 and 840.
+
+which(colnames(PFI)=="full_part1")
+which(colnames(PFI)=="full_part2")
 
 # Create a column for two-parent households' employment status
 # (1) both work full time; (2) both work, some part-time; (3) one works; (4) both not employed
@@ -197,11 +207,53 @@ PFI$income <- ifelse((PFI$TTLHHINC == 1 |
                                     PFI$TTLHHINC == 12), 
                                    4, NA))))
 
+# Create a column for household poverty status 
+# combines both TTLHHINC and HHTOTALXX (see note below)
+PFI$poverty <- ifelse((PFI$HHTOTALXX == 2 | PFI$HHTOTALXX == 3) & 
+                        (PFI$TTLHHINC == 1 | PFI$TTLHHINC == 2), 1, 
+               ifelse((PFI$HHTOTALXX == 4 | PFI$HHTOTALXX == 5 | PFI$HHTOTALXX == 6) & 
+                        (PFI$TTLHHINC == 1 | PFI$TTLHHINC == 2 | PFI$TTLHHINC == 3), 1, 
+               ifelse((PFI$HHTOTALXX == 7 | PFI$HHTOTALXX == 8) & 
+                        (PFI$TTLHHINC == 1 | PFI$TTLHHINC == 2 | 
+                             PFI$TTLHHINC == 3 | PFI$TTLHHINC == 4), 1,
+               ifelse((PFI$HHTOTALXX == 9 | PFI$HHTOTALXX == 10) & 
+                        (PFI$TTLHHINC == 1 | PFI$TTLHHINC == 2 | 
+                             PFI$TTLHHINC == 3 | PFI$TTLHHINC == 4 | PFI$TTLHHINC == 5), 1,
+                  ifelse((PFI$HHTOTALXX == 2 | PFI$HHTOTALXX == 3) & 
+                          (PFI$TTLHHINC == 3 | PFI$TTLHHINC == 4), 2, 
+                  ifelse((PFI$HHTOTALXX == 4 | PFI$HHTOTALXX == 5 | PFI$HHTOTALXX == 6) & 
+                          (PFI$TTLHHINC == 4 | PFI$TTLHHINC == 5 | PFI$TTLHHINC == 6), 2, 
+                  ifelse((PFI$HHTOTALXX == 7 | PFI$HHTOTALXX == 8) & 
+                          (PFI$TTLHHINC == 5 | PFI$TTLHHINC == 6 | PFI$TTLHHINC == 7), 2,
+                  ifelse((PFI$HHTOTALXX == 9 | PFI$HHTOTALXX == 10) & 
+                          (PFI$TTLHHINC == 6 | PFI$TTLHHINC == 7 | PFI$TTLHHINC == 8), 2,
+                                   3))))))))
+
+# From the NCES: Poverty is defined as follows by household size: 
+# (1) if household size is 2 or 3 and income categories TTLHHINC are 1-2 (less than or equal to $20,000); or 
+# (2) if household size is 4, 5, or 6 and income categories TTLHHINC are 1-3 (less than or equal to $30,000); or 
+# (3) if household size is 7 or 8 and income categories TTLHHINC are 1-4 (less than or equal to $40,000); or 
+# (4) if household size is 9 or more and income categories TTLHHINC are 1-5 (less than or equal to $50,000).
+
+# My addition: Near poverty as defined by household size:
+# (1) if household size is 2 or 3 and income categories TTLHHINC are 3-4 (less than or equal to $40,000); or 
+# (2) if household size is 4, 5, or 6 and income categories TTLHHINC are 4-6 (less than or equal to $60,000); or 
+# (3) if household size is 7 or 8 and income categories TTLHHINC are 5-7 (less than or equal to $75,000); or 
+# (4) if household size is 9 or more and income categories TTLHHINC are 6-8 (less than or equal to $100,000).
+
 # Create column with: English spoken at home (1) or no (2)
 PFI$english_or_no <- ifelse(PFI$HHENGLISH == 1, 1, 2)
 
 # Create a column with: food stamps in past 12 mos (1) or no (2)
 PFI$food_stamps <- ifelse(PFI$HFOODST == 1, 1, 2)
+PFI$wic <- ifelse(PFI$HWIC == 1, 1, 2)
+PFI$tanf <- ifelse(PFI$HWELFTANST == 1, 1, 2)
+PFI$medicaid <- ifelse(PFI$HMEDICAID == 1, 1, 2)
+PFI$chip <- ifelse(PFI$HCHIP == 1, 1, 2)
+PFI$sec8 <- ifelse(PFI$HSECN8 == 1, 1, 2)
+
+PFI$welfare <- ifelse(PFI$food_stamps == 1 | PFI$wic == 1 | PFI$tanf == 1 | 
+                         PFI$medicaid == 1 | PFI$chip == 1 | PFI$sec8 == 1, 1, 2)
 
 # Create column that combines all special needs responses: 
 # HSDISABLX, HSILLX, HSSPCLNDX
