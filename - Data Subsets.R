@@ -207,7 +207,7 @@ PFI$income <- ifelse((PFI$TTLHHINC == 1 |
                                     PFI$TTLHHINC == 12), 
                                    4, NA))))
 
-# Create a column for household poverty status 
+# Create a column for household poverty status (1 = poverty, 2 = near-poverty, 3 = no poverty)
 # combines both TTLHHINC and HHTOTALXX (see note below)
 PFI$poverty <- ifelse((PFI$HHTOTALXX == 2 | PFI$HHTOTALXX == 3) & 
                         (PFI$TTLHHINC == 1 | PFI$TTLHHINC == 2), 1, 
