@@ -133,6 +133,44 @@ HOME$FIFTH <- ifelse(HOME$ALLGRADEX == 12 & HOME$HOME11 == 1 & HOME$HOME10 == 1 
                                                                        ifelse(HOME$ALLGRADEX == 4 & HOME$HOME3 == 1 & HOME$HOME2 == 1 & HOME$HOME1 == 1 & HOME$HOMEKX == 1, 1, 
                                                                                      0)))))))))
 
+# What percent homeschooled, returned to school, & came back to homeschooling?
+# In columns HOMEKX through HOME12: 
+#   -- 1 means "was homeschooled that year"
+#   -- 2 means "was not homeschooled that year"
+#   -- NA means "child has not reached that grade yet"
+HSKids <- subset(PFI, SCHTYPE == 3)
+YearsHomeschooled <- HSKids[, 58:70]
+# turn all "not homeschooled" (2) before the first "was homeschooled" (1) into (0)
+# this way all (2)s will mean "was not homeschooled, in between years of homeschooling"
+YearsHomeschooled$HOMEKX[YearsHomeschooled$HOMEKX == 2] <- 0
+YearsHomeschooled$HOME1[YearsHomeschooled$HOME1 == 2 & YearsHomeschooled$HOMEKX == 0] <- 0
+YearsHomeschooled$HOME2[YearsHomeschooled$HOME2 == 2 & YearsHomeschooled$HOME1 == 0] <- 0
+YearsHomeschooled$HOME3[YearsHomeschooled$HOME3 == 2 & YearsHomeschooled$HOME2 == 0] <- 0
+YearsHomeschooled$HOME4[YearsHomeschooled$HOME4 == 2 & YearsHomeschooled$HOME3 == 0] <- 0
+YearsHomeschooled$HOME5[YearsHomeschooled$HOME5 == 2 & YearsHomeschooled$HOME4 == 0] <- 0
+YearsHomeschooled$HOME6[YearsHomeschooled$HOME6 == 2 & YearsHomeschooled$HOME5 == 0] <- 0
+YearsHomeschooled$HOME7[YearsHomeschooled$HOME7 == 2 & YearsHomeschooled$HOME6 == 0] <- 0
+YearsHomeschooled$HOME8[YearsHomeschooled$HOME8 == 2 & YearsHomeschooled$HOME7 == 0] <- 0
+YearsHomeschooled$HOME9[YearsHomeschooled$HOME9 == 2 & YearsHomeschooled$HOME8 == 0] <- 0
+YearsHomeschooled$HOME10[YearsHomeschooled$HOME10 == 2 & YearsHomeschooled$HOME9 == 0] <- 0
+YearsHomeschooled$HOME11[YearsHomeschooled$HOME11 == 2 & YearsHomeschooled$HOME10 == 0] <- 0
+# create vector with "TRUE" if there are any 2s and "FALSE" if there aren't
+returners <- apply(YearsHomeschooled, 1, function(r) any(r %in% c(2)))
+# create new column with 1s for returners, 0s for not returners
+HOME$returner <- ifelse(returners == TRUE, 1, 0)
+
+HOME$sibHS <- ifelse(HOME$CHENRL1 == 1 & !is.na(HOME$CHENRL1), 1,
+                     ifelse(HOME$CHENRL2 == 1 & !is.na(HOME$CHENRL2), 1,
+                            ifelse(HOME$CHENRL3 == 1 & !is.na(HOME$CHENRL3), 1, 
+                                   ifelse(HOME$CHENRL4 == 1 & !is.na(HOME$CHENRL4), 1, 0))))
+
+HOME$sibENRL <- ifelse(HOME$CHENRL1 == 2 & !is.na(HOME$CHENRL1), 1,
+                       ifelse(HOME$CHENRL2 == 2 & !is.na(HOME$CHENRL2), 1,
+                              ifelse(HOME$CHENRL3 == 2 & !is.na(HOME$CHENRL3), 1, 
+                                     ifelse(HOME$CHENRL4 == 2 & !is.na(HOME$CHENRL4), 1, 0))))
+
+HOME$sibBOTH <- ifelse(HOME$sibHS == 1 & HOME$sibENRL == 1, 1, 0)
+
 # HAVE CREATED ALL NEW VALUES AT THIS POINT
 # if need to create new values, add here, before creating design object!
 
@@ -154,8 +192,8 @@ summary(HOMEdesign)
 YearsTable <- round(svytable(~TOTAL + ALLGRADEX, HOMEdesign))
 YearsTable
 
-# FIRST YEAR, number and percent
-round(svytable(~FIRST, HOMEdesign))
+# FIRST YEAR of homeschooling, number and percent
+round(svytable(~FIRST, HOMEdesign)) 
 round(sum(HOME$FIRST * HOME$FPWT)/sum(HOME$FPWT), digits = 3)
 # excluding kindergarten
 NoK <- subset(HOME, ALLGRADEX > 0)
@@ -190,14 +228,11 @@ FourthTable <- round(svytable(~(FOURTH == 1 & TOTAL < 5) + ALLGRADEX, HOMEdesign
 sum(FourthTable[2,])  / sum(ThirdTable[2, 1:12])
 # result: 88.8% of those who homeschool for a 3rd consecutive yr go on to a 4th
 
-# FOURTH YEAR RETENTION RATES
+# FIFTH YEAR RETENTION RATES
 FifthTable <- round(svytable(~(FIFTH == 1 & TOTAL < 6) + ALLGRADEX, HOMEdesign))
 # rate over second year homeschooling
 sum(FifthTable[2,])  / sum(FourthTable[2, 1:12])
 # result: 98.4% of those who homeschool for a 3rd consecutive yr go on to a 4th
-
-# END SECTION ON YEAR BY YEAR RETENTION RATES
-
 
 # HOW MANY FAMILIES HAVE BEEN HOMESCHOOLING ONLY A FEW YEARS?
 
@@ -321,11 +356,6 @@ LAT <- subset(HOME, ALWAYS == 0)
           HOMEdesign,
           na.rm=TRUE)
  
- 
- 
- 
- 
- 
 # COMPARE FIRST YEAR ELEMENTARY AND FIRST YEAR SECONDARY STUDENTS
  
  ELM <- subset(HOME, FIRST == 1 & elementary_secondary == 1)
@@ -347,7 +377,6 @@ LAT <- subset(HOME, ALWAYS == 0)
           subset(HOMEdesign, FIRST == 1),
           na.rm=TRUE)
 
- 
  # Two parent or single parent
  wpct(ELM$two_parent_or_single, weight=ELM$FPWT, na.rm= TRUE)
  wpct(SEC$two_parent_or_single, weight=SEC$FPWT, na.rm= TRUE)
@@ -387,29 +416,8 @@ LAT <- subset(HOME, ALWAYS == 0)
  svyttest(english_or_no ~ elementary_secondary, 
           subset(HOMEdesign, FIRST == 1),
           na.rm=TRUE)
- 
- 
- 
- 
- 
- 
-# EXAMINING NON ENGLISH SPEAKING PARENTS
 
-# Total percent of students with non-English speaking parents
-wpct(HOME$english_or_no, weight=HOME$FPWT, na.rm = TRUE)
-
-# What percent of students without English speaking parents
-# are first-year hoemschooled students
-NoE <- subset(HOME, english_or_no == 2)
-wpct(NoE$TOTAL, weight=NoE$FPWT, na.rm = TRUE)
-
-# Confidence interval
-svyby(~english_or_no == 1, ~(elementary_secondary == 2 & FIRST == 1), 
-      HOMEdesign, 
-      svymean, vartype="ci")
-
-
-# FIRST YEAR v. SOMETIMES v. ALWAYS HOMESCHOOLED STUDENTS
+# DEFUNCT: FIRST YEAR v. SOMETIMES v. ALWAYS HOMESCHOOLED STUDENTS
 # demographic differences (elementary and secondary are combined)
 ALW <- subset(HOME, ALWAYS == 1)
 SOM <- subset(HOME, ALWAYS == 0 & FIRST == 0)
@@ -444,12 +452,10 @@ wpct(SOM$english_or_no, weight=SOM$FPWT, na.rm= TRUE)
 wpct(LAT$english_or_no, weight=LAT$FPWT, na.rm= TRUE)
 
 
+# IS SECONDARY SCHOOL A DIFFERENT SET OF KIDS
 
-
-
-
-
-# SHOWING SECONDARY SCHOOL IS A DIFFERENT SET OF KIDS
+# Number of students in each level:
+svytable(~elementary_secondary, HOMEdesign)
 
 # Percent of secondary students (7-12) homeschooled in grade 6
 svymean(~HOME6, subset(HOMEdesign, elementary_secondary == 2))
@@ -457,8 +463,11 @@ svymean(~HOME6, subset(HOMEdesign, elementary_secondary == 2))
 # Percent of high school students (9-12) homeschooled in grade 6
 svymean(~HOME6, subset(HOMEdesign, ALLGRADEX > 8))
 
+# Percent of high school students (9-12) homeschooled in grade 8
+svymean(~HOME8, subset(HOMEdesign, ALLGRADEX > 8))
+
 # PERCENT OF SECONDARY STUDENTS HOMESCHOOLED LONGTERM
-svymean(~TOTAL > 7, subset(HOMEdesign, elementary_secondary ==2))
+svymean(~TOTAL > 7, subset(HOMEdesign, elementary_secondary == 2))
 
 # What percent of homeschooled high school students 
 # were not homeschooled before high school?
@@ -490,80 +499,57 @@ NBHS/HS
 
 # end this calculation
 
-# high school turnover, as calculated by:
-# 2nd yr homeschoolers in grades 10-12 over 1st yr homeschoolers in grades 9-11
-sum(YearsTable[2,11:13]) / sum(YearsTable[1,10:12])
 
-# kids homeschooled this year but not the previous year, but maybe before that
-G9kids <- HOME$ALLGRADEX == 9 & HOME$HOME8 != 1
-G10kids <- HOME$ALLGRADEX == 10 & HOME$HOME9 != 1
-G11kids <- HOME$ALLGRADEX == 11 & HOME$HOME10 != 1
-
-First <- (sum(G9kids * HOME$FPWT) +
-            sum(G10kids * HOME$FPWT) +
-            sum(G11kids * HOME$FPWT))
-
-# kids homeschooled for the second consecutive year 
-G10kids <- HOME$ALLGRADEX == 10 & HOME$TOTAL == 2 & HOME$HOME9 == 1
-G11kids <- HOME$ALLGRADEX == 11 & HOME$TOTAL == 2 & HOME$HOME10 == 1
-G12kids <- HOME$ALLGRADEX == 12 & HOME$TOTAL == 2 & HOME$HOME11 == 1
-
-Second <- (sum(G10kids * HOME$FPWT) +
-             sum(G11kids * HOME$FPWT) +
-             sum(G12kids * HOME$FPWT))
-
-Second/First
-
-# Second CONSECUTIVE year = 35498
-# Second TOTAL year = 26240
-
-# WHY IS THIS SO MUCH LOWER??
-
-# NOT CONSECUTIVE YEAR -- TRADE OUT SECOND
+# FIRST YEAR TURNOVER, ELEMENTARY V SECONDARY
+# Creating table, first-year turnover for all students combined
+SecondTable <- round(svytable(~(SECOND == 1 & TOTAL < 3) + ALLGRADEX, HOMEdesign))
+sum(SecondTable[2, 2:13])  / sum(YearsTable[1, 1:12])
+# second-year hsers in grades 1-7 v first-year hsers in grades K-6
+sum(SecondTable[2, 2:8]) / sum(YearsTable[1, 1:7])
+# second-year hsers in grades 8-12 v first-year hsers in grades 7-11
+sum(SecondTable[2, 9:13]) / sum(YearsTable[1, 8:12])
 
 
-# THING TO DO! Remove students who were homeschooled non-consecutively from
-# this calculatioN! 
+# HOMESCHOOL RETURNERS
 
-# Does high school have a different retention rate? Secondary school?
+svymean(~returner, HOMEdesign)
+svymean(~returner, subset(HOMEdesign, elementary_secondary == 1))
+svymean(~returner, subset(HOMEdesign, elementary_secondary == 2))
 
+# KIDS WITH SIBLINGS IN SCHOOL
 
+svymean(~sibHS, HOMEdesign)
+svymean(~sibENRL, HOMEdesign)
 
+# by length of homeschooling and age
+svymean(~sibENRL, subset(HOMEdesign, ALWAYS == 1))
+svymean(~sibENRL, subset(HOMEdesign, FIRST == 1))
 
+svymean(~sibENRL, subset(HOMEdesign, elementary_secondary == 1))
+svymean(~sibENRL, subset(HOMEdesign, elementary_secondary == 2))
 
+svymean(~sibENRL, subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2))
 
-# What percent homeschooled, returned to school, & came back to homeschooling?
-# In columns HOMEKX through HOME12: 
-#   -- 1 means "was homeschooled that year"
-#   -- 2 means "was not homeschooled that year"
-#   -- NA means "child has not reached that grade yet"
+# by poverty level
+svymean(~sibENRL, subset(HOMEdesign, poverty == 1))
+svymean(~sibENRL, subset(HOMEdesign, poverty != 1))
 
-# PERCENT OF SECONDARY STUDENTS 
-HSKids <- subset(PFI, SCHTYPE == 3 & elementary_secondary == 2)
-YearsHomeschooled <- HSKids[, 58:70]
-# turn all "not homeschooled" (2) before the first "was homeschooled" (1) into (0)
-# this way all (2)s will mean "was not homeschooled, in between years of homeschooling"
-YearsHomeschooled$HOMEKX[YearsHomeschooled$HOMEKX == 2] <- 0
-YearsHomeschooled$HOME1[YearsHomeschooled$HOME1 == 2 & YearsHomeschooled$HOMEKX == 0] <- 0
-YearsHomeschooled$HOME2[YearsHomeschooled$HOME2 == 2 & YearsHomeschooled$HOME1 == 0] <- 0
-YearsHomeschooled$HOME3[YearsHomeschooled$HOME3 == 2 & YearsHomeschooled$HOME2 == 0] <- 0
-YearsHomeschooled$HOME4[YearsHomeschooled$HOME4 == 2 & YearsHomeschooled$HOME3 == 0] <- 0
-YearsHomeschooled$HOME5[YearsHomeschooled$HOME5 == 2 & YearsHomeschooled$HOME4 == 0] <- 0
-YearsHomeschooled$HOME6[YearsHomeschooled$HOME6 == 2 & YearsHomeschooled$HOME5 == 0] <- 0
-YearsHomeschooled$HOME7[YearsHomeschooled$HOME7 == 2 & YearsHomeschooled$HOME6 == 0] <- 0
-YearsHomeschooled$HOME8[YearsHomeschooled$HOME8 == 2 & YearsHomeschooled$HOME7 == 0] <- 0
-YearsHomeschooled$HOME9[YearsHomeschooled$HOME9 == 2 & YearsHomeschooled$HOME8 == 0] <- 0
-YearsHomeschooled$HOME10[YearsHomeschooled$HOME10 == 2 & YearsHomeschooled$HOME9 == 0] <- 0
-YearsHomeschooled$HOME11[YearsHomeschooled$HOME11 == 2 & YearsHomeschooled$HOME10 == 0] <- 0
-# (sum(apply(YearsHomeschooled, 1, function(r) any(r %in% c(2)))))/NROW(YearsHomeschooled)
-# the above line would give the raw percent, without weighting
-returners <- apply(YearsHomeschooled, 1, function(r) any(r %in% c(2)))
-weights <- HSKids[, 408]
-sum(weights * returners) / sum(weights$FPWT)
+HOMEdesign <- update(HOMEdesign,  poverty_no = ifelse(poverty == 1, "poverty", ifelse(poverty != 1, "no", NA)))
 
-# END analysis of homeschool returners
+svyttest(sibENRL ~ poverty_no, 
+         HOMEdesign,
+         na.rm=TRUE)
 
+# by parent education
+svymean(~sibENRL, subset(HOMEdesign, ba_no_ba == 1))
+svymean(~sibENRL, subset(HOMEdesign, ba_no_ba == 2))
 
+svyttest(sibENRL ~ ba_no_ba, 
+         HOMEdesign,
+         na.rm=TRUE)
 
+# by reasons for homeschooling
+svymean(~sibENRL, subset(HOMEdesign, HSRELGON == 1))
+svymean(~sibENRL, subset(HOMEdesign, HSDISABLX == 1))
 
 # END SCRIPT
