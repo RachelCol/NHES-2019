@@ -103,6 +103,6 @@ WEIGHTS <- t(WEIGHTS)
 colnames(WEIGHTS) <- c("Count", "Weighted Total", "Max Weight", "Mean Weight", "Percent")
 print(WEIGHTS)
 
-write.csv(WEIGHTS,"/Users/Rachel/R-Projects/NHES-2019/WEIGHTS.csv", row.names = TRUE)
+# write.csv(WEIGHTS,"/Users/Rachel/R-Projects/NHES-2019/WEIGHTS.csv", row.names = TRUE)
 
 # End weight table section
