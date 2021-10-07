@@ -497,6 +497,63 @@ HOME$numberR <- rowSums(HOME[, 71:79])
 # change the 0s back to 2s so as not to break any code
 HOME[, 71:79][HOME[, 71:79] == 0] <- 2 
 
+# GOAL: Find a way to identify any child who is also enrolled
+# in a school, for online or in-person classes.
+# -- public school
+# -- private school
+# -- virtual school (actually enrolled, some or all)
+
+# note: I am leaving college out of this entirely
+
+# FIRST, create column with 1-4, from "type of school" Q at beginning
+HOME$school <- ifelse(HOME$EDCPUB == 1, 1,
+                      ifelse(HOME$EDCCAT == 1, 2, 
+                             ifelse(HOME$EDCREL == 1, 2,
+                                    ifelse(HOME$EDCPRI == 1, 2, 
+                                           ifelse(HOME$EDCINTK12 == 1, 3, 
+                                                                NA)))))
+
+# SECOND, create column with 1-3, from "also enrolled in school" section
+# 1 = public school
+# 2 = private school
+# 3 = virtual school
+
+HOME$Q31 <- ifelse(HOME$DISTASSI == 1 | HOME$DISTASSI == 2, 1, 2)
+# 19 answered Q31 (public)
+HOME$Q32 <- ifelse(HOME$SCHRTSCHL == 1 | HOME$SCHRTSCHL == 2, 1, 2)
+# 31 answered Q32 (virtual) - must subtract Q31 from this
+HOME$Q34 <- ifelse(HOME$SNEIGHBRX == 1 | HOME$SNEIGHBRX == 2, 1, 2)
+# 44 answered Q34 (private) - must subtract Q31 & Q32 from this
+
+# turn all NAs into 0s (otherwise they gum this up)
+which( colnames(HOME)=="Q31" )
+which( colnames(HOME)=="Q32" )
+which( colnames(HOME)=="Q34" )
+HOME[c(879, 880, 881)][is.na(HOME[c(879, 880, 881)])] <- 0
+
+# create column with 1-3 for answering Qs about public, private, or virtual
+# schools in the "child is also enrolled in a school" section
+HOME$also <- ifelse(HOME$Q31 == 1, 1,
+                    ifelse(HOME$Q32 == 1 & HOME$Q31 != 1, 3,
+                           ifelse(HOME$Q34 == 1 & HOME$Q32 != 1, 2, NA)))
+
+# THIRD, combine both objects (school and also)
+
+# start by turning NAs to 0, or they will mess it up
+which( colnames(HOME)=="school" )
+which( colnames(HOME)=="also" )
+HOME[c(878, 882)][is.na(HOME[c(878, 882)])] <- 0
+
+HOME$enrolled <- ifelse(HOME$school == 1, 1,
+                        ifelse(HOME$also == 1, 1,
+                               ifelse(HOME$school == 2, 2,
+                                      ifelse(HOME$also == 2, 2,
+                                             ifelse(HOME$school == 3, 3,
+                                                    ifelse(HOME$also == 3, 3,
+                                                                  NA))))))
+
+# END creation of enrolled object
+
 # HAVE CREATED ALL NEW VALUES AT THIS POINT
 # if need to create new values, add here, before creating design object!
 
