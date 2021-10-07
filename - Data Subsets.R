@@ -263,6 +263,49 @@ PFI$disability <- ifelse((PFI$HSDISABLX == 1), 1,
                      ifelse((PFI$HSILLX == 1), 1,
                          ifelse((PFI$HSSPCLNDX == 1), 1, 2)))
 
+# CREATING a measure of socio-economic status:
+# parent education levels, 1-5
+# family poverty levels, 1-3
+# Add those numbers together, giving us 2-8
+# Then divide into three: 2-4, 5-6, 7-8
+
+# To be low SES someone has to be (a) under 100% of poverty and 
+# completed vocational/technical school or some college max OR (b) 
+# under 200% of poverty and completed high school max OR (3) over 
+# 200% of poverty, but never completed high school.
+# To be middle SES someone has to be (a) under the 200% of poverty 
+# line and have a college degree OR (b) over 100% of poverty and
+# have voc/tech or some college OR (c) be above 200% of poverty
+# and have a high school diploma or equivalent.
+# To be high SES someone has to be (a) between 100% and 200% of
+# poverty and have a graduate or professional degree OR (b) be above
+# the 200% of poverty level and have at least a college degree.
+
+PFI$SESraw <- PFI$PARGRADEX + PFI$poverty
+PFI$SES <- ifelse(PFI$SESraw < 5, 1, 
+                  ifelse(PFI$SESraw == 5 | PFI$SESraw == 6, 2,
+                         ifelse(PFI$SESraw > 6, 3, NA)))
+
+PFI$grade_range <- ifelse(PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2 | PFI$ALLGRADEX == 3, 1, 
+                           ifelse(PFI$ALLGRADEX == 4 | PFI$ALLGRADEX == 5 | PFI$ALLGRADEX == 6, 2, 
+                                  ifelse(PFI$ALLGRADEX == 7 | PFI$ALLGRADEX == 8 | PFI$ALLGRADEX == 9, 3,
+                                         ifelse(PFI$ALLGRADEX == 10 | PFI$ALLGRADEX == 11 | PFI$ALLGRADEX == 12, 4,
+                                                NA))))
+
+PFI$grade_range2 <- ifelse(PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2, 1, 
+                          ifelse(PFI$ALLGRADEX == 3 | PFI$ALLGRADEX == 4, 2,
+                              ifelse(PFI$ALLGRADEX == 5 | PFI$ALLGRADEX == 6, 3, 
+                                 ifelse(PFI$ALLGRADEX == 7 | PFI$ALLGRADEX == 8, 4,
+                                        ifelse(PFI$ALLGRADEX == 9 | PFI$ALLGRADEX == 10, 5,
+                                            ifelse(PFI$ALLGRADEX == 11 | PFI$ALLGRADEX == 12, 6,
+                                               NA))))))
+
+PFI$condition <- ifelse((PFI$HDINTDIS == 1 | PFI$HDSPEECHX == 1 | PFI$HDDISTRBX == 1 | 
+                        PFI$HDDEAFIMX == 1 | PFI$HDDEAFIMX == 1 | PFI$HDORTHOX == 1 | 
+                        PFI$HDAUTISMX == 1 | PFI$HDPDDX == 1 | PFI$HDADDX == 1 | 
+                        PFI$HDADDX == 1 | PFI$HDDELAYX == 1 | PFI$HDTRBRAIN == 1 | 
+                        PFI$HDOTHERX == 1), 1, 0) 
+
 # May want to add a column comparing virtual v. non-virtual
 
 # For general PFI data file, input details into survey package
@@ -467,3 +510,16 @@ HOMEdesign <- svrepdesign(
 summary(HOMEdesign)
 
 # END HOME DATA SET DESIGN CREATION
+
+# MERGE DATA SETS for certain functions
+
+# COMBINED <- merge(PFI, HOME, all = TRUE, sort = TRUE)
+
+COMBINEDdesign <- svrepdesign(
+  data = COMBINED, 
+  repweights = subset(COMBINED, select = FPWT1:FPWT80), 
+  weights= ~FPWT, type="JK1", mse=TRUE, combined.weights=TRUE, 
+  scale=79/80)
+summary(COMBINEDdesign)
+
+# END DATA SET MERGER CREATION
