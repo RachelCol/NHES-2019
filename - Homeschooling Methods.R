@@ -485,265 +485,590 @@ cv(svymean(~HSNATL == 1, subset(HOMEdesign, elementary_secondary != 1)))
 
 #START with where they get curriculum
 
-# START HERE!
-
-
-
-
-
-
-# ---
-
-# NEXT QUESTION: In the past month, have you visited a library? FOLIBRAYX 
-
-round(wpct(HOME$FOLIBRAYX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
-
-# by SES level
-part <- subset(HOME, SES == 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, SES == 2)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, SES == 3)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# by reasons for homeschooling: religion
-part <- subset(HOME, HSRELGON == 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, HSRELGON != 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# by reasons for homeschooling: disability
-part <- subset(HOME, disability == 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, disability != 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# by bachelor's degree or no
-part <- subset(HOME, ba_no_ba == 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ba_no_ba != 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# no HS diploma
-part <- subset(HOME, PARGRADEX == 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, PARGRADEX != 1)
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# length of time homeschooled
-part <- subset(HOME, FIRST == 1 & ALLGRADEX > 0) # first year of homeschooling
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, FIRST != 1 & ALWAYS != 1) # some years hsing
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ALWAYS == 1) # always homeschooled
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ALWAYS != 1) # all homeschool transfers
-round(wpct(part$FOLIBRAYX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# ---
-
-# NEXT QUESTION: Do you get physical curriculum from your local public schools? HSCPUBLX
-
+# public library
+round(wpct(HOME$HSCLIBRX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+# homeschool catalogue or publisher
+round(wpct(HOME$HSCHSPUBX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+# public school
 round(wpct(HOME$HSCPUBLX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
-
-# by SES level
-part <- subset(HOME, SES == 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, SES == 2)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, SES == 3)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# by reasons for homeschooling: religion
-part <- subset(HOME, HSRELGON == 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, HSRELGON != 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# by reasons for homeschooling: disability
-part <- subset(HOME, disability == 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, disability != 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# by bachelor's degree or no
-part <- subset(HOME, ba_no_ba == 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ba_no_ba != 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# no HS diploma
-part <- subset(HOME, PARGRADEX == 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, PARGRADEX != 1)
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# length of time homeschooled
-part <- subset(HOME, FIRST == 1 & ALLGRADEX > 0) # first year of homeschooling
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, FIRST != 1 & ALWAYS != 1) # some years hsing
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ALWAYS == 1) # always homeschooled
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ALWAYS != 1) # all homeschool transfers
-round(wpct(part$HSCPUBLX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-
-# ---
-
-# NEXT QUESTION: Do you get physical curriculum from a homeschool convention?
+# homeschool convention or other event for homeschooling families
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, HOMEdesign)
 
 round(wpct(HOME$HSCCNVX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSCEVTX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSCFMLY, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSCLIBRX == 1, HOMEdesign))
+cv(svymean(~HSCHSPUBX == 1, HOMEdesign))
+cv(svymean(~HSCPUBLX == 1, HOMEdesign))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, HOMEdesign))
 
 # by SES level
-part <- subset(HOME, SES == 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, SES == 2)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, SES == 3)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, SES == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, SES == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, SES == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, SES == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, SES == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, SES == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, SES == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, SES == 1)))
+
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, SES == 2))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, SES == 2))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, SES == 2))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, SES == 2))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, SES == 2)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, SES == 2)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, SES == 2)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, SES == 2)))
+
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, SES == 3))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, SES == 3))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, SES == 3))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, SES == 3))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, SES == 3)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, SES == 3)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, SES == 3)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, SES == 3)))
 
 # by reasons for homeschooling: religion
-part <- subset(HOME, HSRELGON == 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, HSRELGON != 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, HSRELGON == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, HSRELGON == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, HSRELGON == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, HSRELGON == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, HSRELGON == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, HSRELGON == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, HSRELGON == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, HSRELGON == 1)))
 
 # by reasons for homeschooling: disability
-part <- subset(HOME, disability == 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, disability != 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, disability == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, disability == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, disability == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, disability == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, disability == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, disability == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, disability == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, disability == 1)))
 
 # by bachelor's degree or no
-part <- subset(HOME, ba_no_ba == 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ba_no_ba != 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, ba_no_ba == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, ba_no_ba == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, ba_no_ba == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, ba_no_ba == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, ba_no_ba == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, ba_no_ba == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, ba_no_ba == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, ba_no_ba == 1)))
 
 # no HS diploma
-part <- subset(HOME, PARGRADEX == 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, PARGRADEX != 1)
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
+# by bachelor's degree or no
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, PARGRADEX == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, PARGRADEX == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, PARGRADEX == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, PARGRADEX == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, PARGRADEX == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, PARGRADEX == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, PARGRADEX == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, PARGRADEX == 1)))
 
 # length of time homeschooled
-part <- subset(HOME, FIRST == 1 & ALLGRADEX > 0) # first year of homeschooling
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, FIRST != 1 & ALWAYS != 1) # some years hsing
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ALWAYS == 1) # always homeschooled
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
-part <- subset(HOME, ALWAYS != 1) # all homeschool transfers
-round(wpct(part$HSCCNVX, weight=part$FPWT, na.rm=TRUE), digits = 3)
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, ALWAYS == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, ALWAYS == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, ALWAYS == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, ALWAYS == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, ALWAYS == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, ALWAYS == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, ALWAYS == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, ALWAYS == 1)))
+
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, ALWAYS != 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, ALWAYS != 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, ALWAYS != 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, ALWAYS != 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, ALWAYS != 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, ALWAYS != 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, ALWAYS != 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, ALWAYS != 1)))
+
+# elementary v. secondary students
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, elementary_secondary == 1))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, elementary_secondary == 1))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, elementary_secondary == 1))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, elementary_secondary == 1))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, elementary_secondary == 1)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, elementary_secondary == 1)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, elementary_secondary == 1)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, elementary_secondary == 1)))
+
+svymean(~HSCLIBRX == 1, subset(HOMEdesign, elementary_secondary == 2))
+svymean(~HSCHSPUBX == 1, subset(HOMEdesign, elementary_secondary == 2))
+svymean(~HSCPUBLX == 1, subset(HOMEdesign, elementary_secondary == 2))
+svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+        subset(HOMEdesign, elementary_secondary == 2))
+
+cv(svymean(~HSCLIBRX == 1, subset(HOMEdesign, elementary_secondary == 2)))
+cv(svymean(~HSCHSPUBX == 1, subset(HOMEdesign, elementary_secondary == 2)))
+cv(svymean(~HSCPUBLX == 1, subset(HOMEdesign, elementary_secondary == 2)))
+cv(svymean(~HSCCNVX == 1 | HSCEVTX == 1 | HSCFMLY == 1, 
+           subset(HOMEdesign, elementary_secondary == 2)))
+
+# ---
+
+# NEXT QUESTION: What types of schools or teachers provide the child's
+# online courses?
+
+# create a design object so I can test the coefficient of variance
+# note that these respondents are ONLY the ones providing online courses
+ONLINE <- subset(HOME, HSINTNET != 4)
+ONLINEdesign <- svrepdesign(
+  data = ONLINE, 
+  repweights = subset(ONLINE, select = FPWT1:FPWT80), 
+  weights= ~FPWT, type="JK1", mse=TRUE, combined.weights=TRUE, 
+  scale=79/80)
+summary(ONLINEdesign)
+# end creation of survey object
+
+# full list of options for this question
+round(wpct(HOME$HSINTPUB, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTPRI, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTCOL, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTVRT, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTCMP, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTK12, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTIND, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTCOL == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTK12 == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTIND == 1, ONLINEdesign), na.rm=TRUE)
+
+# PLAYGROUND full list of options
+part <- subset(HOME, HSINTNET == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCOL, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTK12, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTIND, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+# PLAYGROUND testing coefficient of variation
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCOL == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTK12 == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTIND == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
 
 
+# SECIFIC STATISTICAL SIGNIFICANCE CACULATIONS
 
-# DIFFERENT SECTION 
-# ADD TO REASONS FOR HOMESCHOOLING
-
-# Does this child have specific disabilities? 
-
-# having any condition
-svymean(~condition==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~condition==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest((condition==1) ~ home_public, 
-         PFIdesign,
+# through public school, low SES v other
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, SES == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, SES != 1))
+svyttest((HSINTPUB == 1) ~ (SES == 1), 
+         HOMEdesign,
+         na.rm=TRUE)
+# through a virtual school, low SES v other
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, SES == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, SES != 1))
+svyttest((HSINTVRT == 1) ~ (SES == 1), 
+         HOMEdesign,
+         na.rm=TRUE)
+# through a company for purchase, high SES v other
+svymean(~HSINTCMP == 1, subset(ONLINEdesign, SES == 3))
+svymean(~HSINTCMP == 1, subset(ONLINEdesign, SES != 3))
+svyttest((HSINTCMP == 1) ~ (SES == 3), 
+         HOMEdesign,
          na.rm=TRUE)
 
-# having an intellectual disability (mental retardation) -- NOT significant
-svymean(~HDINTDIS==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDINTDIS==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDINTDIS==1 ~ home_public, 
-         PFIdesign,
+# through public school, all online courses v. some online courses
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, HSINTNET == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3))
+HOMEdesign <- update(HOMEdesign,  all_some = ifelse(HSINTNET == 1, "all", ifelse((HSINTNET == 2 | HSINTNET == 3), "some", NA)))
+svyttest((HSINTPUB == 1) ~ all_some, 
+         HOMEdesign,
+         na.rm=TRUE)
+# through virtual academy, all online courses v. some online courses
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, HSINTNET == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3))
+HOMEdesign <- update(HOMEdesign,  all_some = ifelse(HSINTNET == 1, "all", ifelse((HSINTNET == 2 | HSINTNET == 3), "some", NA)))
+svyttest((HSINTVRT == 1) ~ all_some, 
+         HOMEdesign,
+         na.rm=TRUE)
+# through company, all online courses v. some online courses
+svymean(~HSINTCMP == 1, subset(ONLINEdesign, HSINTNET == 1))
+svymean(~HSINTCMP == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3))
+HOMEdesign <- update(HOMEdesign,  all_some = ifelse(HSINTNET == 1, "all", ifelse((HSINTNET == 2 | HSINTNET == 3), "some", NA)))
+svyttest((HSINTCMP == 1) ~ all_some, 
+         HOMEdesign,
          na.rm=TRUE)
 
-# having a speech impairment -- NOT significant
-svymean(~HDSPEECHX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDSPEECHX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest((HDSPEECHX==1) ~ home_public, 
-         PFIdesign,
+# parents with a BA v. those without, online courses through a public school
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, PARGRADEX < 4))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, PARGRADEX > 3))
+svyttest((HSINTPUB == 1) ~ (PARGRADEX < 4), 
+         HOMEdesign,
+         na.rm=TRUE)
+# parents with a BA v. those without, online courses through a private company
+svymean(~HSINTCMP == 1, subset(ONLINEdesign, PARGRADEX < 4))
+svymean(~HSINTCMP == 1, subset(ONLINEdesign, PARGRADEX > 3))
+svyttest((HSINTCMP == 1) ~ (PARGRADEX < 4), 
+         HOMEdesign,
          na.rm=TRUE)
 
-# having a serious emotional disturbance -- NOT significant
-svymean(~HDDISTRBX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDDISTRBX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest((HDDISTRBX==1) ~ home_public, 
-         PFIdesign,
+# virtual school, disability v. no
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1))
+svyttest((HSINTVRT == 1) ~ (disability == 1), 
+         HOMEdesign,
+         na.rm=TRUE)
+# online public school, disability v. no
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1))
+svyttest((HSINTVRT == 1) ~ (disability == 1), 
+         HOMEdesign,
          na.rm=TRUE)
 
-# having deafness or hearing impairment -- NOT significant
-svymean(~HDDEAFIMX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDDEAFIMX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest((HDDEAFIMX==1) ~ home_public, 
-         PFIdesign,
+
+# online public school, disability v. no
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 3))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 3))
+svyttest((HSINTVRT == 1) ~ (disability == 1), 
+         subset(HOMEdesign, SES == 3),
          na.rm=TRUE)
 
-# having a blindness or visual impairment -- NOT significant
-svymean(~HDBLINDX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDBLINDX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest((HDBLINDX==1) ~ home_public, 
-         PFIdesign,
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1))
+svyttest((HSINTPUB == 1) ~ (disability == 1), 
+         HOMEdesign,
          na.rm=TRUE)
 
-# having an orthopedic impairment -- ALMOST significant (p = 0.06)
-svymean(~HDORTHOX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDORTHOX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest((HDORTHOX==1) ~ home_public, 
-         PFIdesign,
+
+# virtual school, disabilities or no by SES
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 1))
+svyttest((HSINTVRT == 1) ~ (disability == 1), 
+         subset(HOMEdesign, SES == 1),
+         na.rm=TRUE)
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 2))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 2))
+svyttest((HSINTVRT == 1) ~ (disability == 1), 
+         subset(HOMEdesign, SES == 2),
+         na.rm=TRUE)
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 3))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 3))
+svyttest((HSINTVRT == 1) ~ (disability == 1), 
+         subset(HOMEdesign, SES == 3),
          na.rm=TRUE)
 
-# having autism -- statistically significant ( < 0.05)
-svymean(~HDAUTISMX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDAUTISMX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDAUTISMX==1 ~ home_public, 
-         PFIdesign,
+
+# THIS IS THE ONE TO KEEP
+# disabilities, online courses v. all other options -- THIS IS THE MOTHERLOAD
+svymean(~disability == 1, subset(ONLINEdesign, HSINTPUB == 1))
+svymean(~disability == 1, subset(ONLINEdesign, HSINTVRT == 1))
+HOMEdesign <- update(HOMEdesign,  pub_vir = ifelse(HSINTPUB == 1, "pub", ifelse((HSINTVRT == 1), "vir", NA)))
+svyttest((disability == 1) ~ pub_vir, 
+         HOMEdesign,
          na.rm=TRUE)
 
-# having pervasive developmental disorder (PDD) -- ALMOST sig (p = 0.1)
-svymean(~HDPDDX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDPDDX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDPDDX==1 ~ home_public, 
-         PFIdesign,
+# online courses through child's public school, -- CLOSE to sig (0.09)
+# low SES ppl with and without a disability
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & SES == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & SES == 1))
+svyttest((HSINTPUB == 1) ~ (disability == 1), 
+         subset(HOMEdesign, SES == 1),
          na.rm=TRUE)
 
-# having ADD or ADHD -- NOT significant
-svymean(~HDADDX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDADDX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDADDX==1 ~ home_public, 
-         PFIdesign,
+# online courses through child's public school, -- CLOSE to sig (0.07)
+# low and middle SES ppl with and without a disability
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & SES != 3))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & SES != 3))
+svyttest((HSINTPUB == 1) ~ (disability == 1), 
+         subset(HOMEdesign, SES != 3),
          na.rm=TRUE)
 
-# having a specific learning disability -- statistically significant (p < 0.05)
-svymean(~HDLEARNX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDLEARNX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDLEARNX==1 ~ home_public, 
-         PFIdesign,
+# online courses through child's public school -- STATISTICAL SIGNIFICANCE!!
+# people without a BA, with and without a disability
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & ba_no_ba == 2))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & ba_no_ba == 2))
+svyttest((HSINTPUB == 1) ~ (disability == 1), 
+         subset(HOMEdesign, ba_no_ba == 2),
          na.rm=TRUE)
 
-# the above, broken down by SES
-svymean(~HDLEARNX==1, subset(PFIdesign, SCHTYPE==3 & SES == 1), na.rm=TRUE)
-svymean(~HDLEARNX==1, subset(PFIdesign, SCHTYPE==3 & SES == 2), na.rm=TRUE)
-svymean(~HDLEARNX==1, subset(PFIdesign, SCHTYPE==3 & SES == 3), na.rm=TRUE)
-
-# having a developmental delay -- statistically significant (p < 0.05)
-svymean(~HDDELAYX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDDELAYX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDDELAYX==1 ~ home_public, 
-         PFIdesign,
+# People with disability more likely to do online courses than others
+svymean(~HSINTNET < 4, subset(HOMEdesign, disability == 1))
+svymean(~HSINTNET < 4, subset(HOMEdesign, disability != 1))
+svyttest((HSINTNET < 4) ~ (disability == 1), 
+         HOMEdesign, 
          na.rm=TRUE)
 
-# having a traumatic brain injury -- NOT significant
-svymean(~HDTRBRAIN==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDTRBRAIN==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDTRBRAIN==1 ~ home_public, 
-         PFIdesign,
-         na.rm=TRUE)
 
-# having other health impairment longer than 6mos -- NOT significant
-svymean(~HDOTHERX==1, subset(PFIdesign, SCHTYPE==3), na.rm=TRUE)
-svymean(~HDOTHERX==1, subset(PFIdesign, SCHTYPE==1), na.rm=TRUE)
-svyttest(HDOTHERX==1 ~ home_public, 
-         PFIdesign,
-         na.rm=TRUE)
 
-# END SCRIPT
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & SES == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & SES == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & SES == 2))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & SES == 2))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & SES == 3))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & SES == 3))
+# 53.7% of low ses ppl who don't have a disability use online public school
+# only 18.4% of low ses people wiht a disability use online public school
+
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 1))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 2))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 2))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1 & SES == 3))
+svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability != 1 & SES == 3))
+
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & ba_no_ba == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & ba_no_ba == 1))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1 & ba_no_ba == 2))
+svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability != 1 & ba_no_ba == 2))
+
+
+part <- subset(HOME, disability == 1)
+round(wpct(part$HSINTNET, weight=part$FPWT, na.rm=TRUE), digits = 3)
+part <- subset(HOME, disability != 1)
+round(wpct(part$HSINTNET, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+
+
+
+ 
+# KEEP THIS
+# ALL PARENTS WITH ONLINE COURSES
+round(wpct(HOME$HSINTPUB, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTPRI, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTCOL, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTVRT, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTCMP, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTK12, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTIND, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTOH, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+cv(svymean(~HSINTPUB == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTCOL == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTK12 == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTIND == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTOH == 1, ONLINEdesign), na.rm=TRUE)
+# Respondents whose kids are in online courses for ALL classes
+part <- subset(HOME, HSINTNET == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCOL, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTK12, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTIND, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTOH, weight=part$FPWT, na.rm=TRUE), digits = 3)
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCOL == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTK12 == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTIND == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+cv(svymean(~HSINTOH == 1, subset(ONLINEdesign, HSINTNET == 1)), na.rm=TRUE)
+# Respondents whose kids are in online courses for SOME classes
+part <- subset(HOME, HSINTNET == 2 | HSINTNET == 3)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCOL, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTK12, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTIND, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTOH, weight=part$FPWT, na.rm=TRUE), digits = 3)
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTCOL == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTK12 == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTIND == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+cv(svymean(~HSINTOH == 1, subset(ONLINEdesign, HSINTNET == 2 | HSINTNET == 3)), na.rm=TRUE)
+
+# SOURCES FOR ONLINE COURSES
+# Mundane overall examination, like the others
+
+# potentially am only looking at these:
+round(wpct(HOME$HSINTPUB, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTPRI, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTVRT, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HOME$HSINTCMP, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, ONLINEdesign), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, ONLINEdesign), na.rm=TRUE)
+
+# BY SES LEVEL
+part <- subset(HOME, SES == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, SES == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, SES == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, SES == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, SES == 1)), na.rm=TRUE)
+
+part <- subset(HOME, SES == 2)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, SES == 2)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, SES == 2)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, SES == 2)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, SES == 2)), na.rm=TRUE)
+
+part <- subset(HOME, SES == 3)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, SES == 3)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, SES == 3)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, SES == 3)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, SES == 3)), na.rm=TRUE)
+
+# BY REASONS FOR HOMESCHOOLING
+part <- subset(HOME, HSRELGON == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, HSRELGON == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, HSRELGON == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, HSRELGON == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, HSRELGON == 1)), na.rm=TRUE)
+
+part <- subset(HOME, disability == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, disability == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, disability == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, disability == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, disability == 1)), na.rm=TRUE)
+
+# BY PARENT EDUCATION LEVEL
+part <- subset(HOME, ba_no_ba == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, ba_no_ba == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, ba_no_ba == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, ba_no_ba == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, ba_no_ba == 1)), na.rm=TRUE)
+
+part <- subset(HOME, PARGRADEX == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, PARGRADEX == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, PARGRADEX == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, PARGRADEX == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, PARGRADEX == 1)), na.rm=TRUE)
+
+# BY LENGTH OF TIME HOMESCHOOLING
+part <- subset(HOME, ALWAYS == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, ALWAYS == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, ALWAYS == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, ALWAYS == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, ALWAYS == 1)), na.rm=TRUE)
+
+part <- subset(HOME, ALWAYS != 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, ALWAYS != 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, ALWAYS != 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, ALWAYS != 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, ALWAYS != 1)), na.rm=TRUE)
+
+# BY CHILD'S GRADE LEVEL
+part <- subset(HOME, elementary_secondary == 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, elementary_secondary == 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, elementary_secondary == 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, elementary_secondary == 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, elementary_secondary == 1)), na.rm=TRUE)
+
+part <- subset(HOME, elementary_secondary != 1)
+round(wpct(part$HSINTPUB, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTPRI, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTVRT, weight=part$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(part$HSINTCMP, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+cv(svymean(~HSINTPUB == 1, subset(ONLINEdesign, elementary_secondary != 1)), na.rm=TRUE)
+cv(svymean(~HSINTPRI == 1, subset(ONLINEdesign, elementary_secondary != 1)), na.rm=TRUE)
+cv(svymean(~HSINTVRT == 1, subset(ONLINEdesign, elementary_secondary != 1)), na.rm=TRUE)
+cv(svymean(~HSINTCMP == 1, subset(ONLINEdesign, elementary_secondary != 1)), na.rm=TRUE)
+
+
+
+
+
+# END section on homeschooling methods
