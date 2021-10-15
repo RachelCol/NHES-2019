@@ -5,10 +5,172 @@
 
 # Create subsets to enable comparison of homeschooled elementary and secondary
 
-HOME <- subset(PFI, SCHTYPE == 3)
-
 EL_HS <- subset(HOME, elementary_secondary == 1)
 SEC_HS <- subset(HOME, elementary_secondary == 2)
+
+round(wpct(PFI$SES, weight=PFI$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(PFI, SCHTYPE == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(PFI, SCHTYPE == 3)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+svyttest((SES == 1) ~ home_public, 
+         PFIdesign,
+         na.rm=TRUE)
+svyttest((SES == 2) ~ home_public, 
+         PFIdesign,
+         na.rm=TRUE)
+svyttest((SES == 3) ~ home_public, 
+         PFIdesign,
+         na.rm=TRUE)
+
+
+HS <- subset(PFI, SCHTYPE == 3 & elementary_secondary==1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(PFI, SCHTYPE == 3 & elementary_secondary==2)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+svyttest((SES == 1) ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 2) ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 3) ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+
+HS <- subset(HOME, FIRST == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(HOME, ALWAYS == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(HOME, ALWAYS == 0 & FIRST == 0)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HOMEdesign <- update(HOMEdesign,  
+                     first_always = ifelse(FIRST == 1, "first", 
+                                           ifelse(ALWAYS == 1, "always", NA)))
+
+svyttest((SES == 1) ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 2) ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 3) ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+
+HS <- subset(HOME, disability == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(HOME, HSRELGON == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(HOME, HSRELGON != 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(HOME, HSDISSATX == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(HOME, HSDISSATX != 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(HOME, HSSAFETYX == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+HS <- subset(HOME, two_parent_or_single == 2)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(PFI, two_parent_or_single == 2 & SCHTYPE == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+# ADDING RACE TO THE MIX, WITH SCHOOL LEVEL AND SES
+
+PFIdesign <- update(PFIdesign, home_other = ifelse(SCHTYPE == 3, "home", "other"))
+
+# elementary school, white v nonwhite, public school v homeschool
+HS <- subset(HOME, white_nonwhite == 1 & elementary_secondary == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(PFI, white_nonwhite == 1 & SCHTYPE != 3 & elementary_secondary == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+svyttest((SES == 3) ~ home_other, 
+         subset(PFIdesign, elementary_secondary == 1 & white_nonwhite == 1),
+         na.rm=TRUE)
+
+HS <- subset(HOME, white_nonwhite == 2 & elementary_secondary == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(PFI, white_nonwhite == 2 & SCHTYPE != 3 & elementary_secondary == 1)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+svyttest((SES == 3) ~ home_other, 
+         subset(PFIdesign, elementary_secondary == 1 & white_nonwhite == 2),
+         na.rm=TRUE)
+
+# secondary school, white v nonwhite, public school v homeschool
+HS <- subset(HOME, white_nonwhite == 1 & elementary_secondary == 2)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(PFI, white_nonwhite == 1 & SCHTYPE != 3 & elementary_secondary == 2)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+svyttest((SES == 3) ~ home_other, 
+         subset(PFIdesign, elementary_secondary == 2 & white_nonwhite == 1),
+         na.rm=TRUE)
+
+HS <- subset(HOME, white_nonwhite == 2 & elementary_secondary == 2)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+HS <- subset(PFI, white_nonwhite == 2 & SCHTYPE != 3 & elementary_secondary == 2)
+round(wpct(HS$SES, weight=HS$FPWT, na.rm=TRUE), digits = 3)
+
+svyttest((SES == 3) ~ home_other, 
+         subset(PFIdesign, elementary_secondary == 2 & white_nonwhite == 2),
+         na.rm=TRUE)
+
+
+# Showing that homeschoolers have lower incomes relative to their education
+
+HOMEtable <- svytable(~poverty+PARGRADEX, HOMEdesign)
+PFItable <- svytable(~poverty+PARGRADEX, PFIdesign)
+
+PFIpercent <- cbind(round(PFItable[, 1] / sum(PFItable[, 1]), digits = 3), 
+     round(PFItable[, 2] / sum(PFItable[, 2]), digits = 3), 
+     round(PFItable[, 3] / sum(PFItable[, 3]), digits = 3), 
+     round(PFItable[, 4] / sum(PFItable[, 4]), digits = 3), 
+     round(PFItable[, 5] / sum(PFItable[, 5]), digits = 3))
+
+HOMEpercent <- cbind(round(HOMEtable[, 1] / sum(HOMEtable[, 1]), digits = 3), 
+      round(HOMEtable[, 2] / sum(HOMEtable[, 2]), digits = 3), 
+      round(HOMEtable[, 3] / sum(HOMEtable[, 3]), digits = 3), 
+      round(HOMEtable[, 4] / sum(HOMEtable[, 4]), digits = 3), 
+      round(HOMEtable[, 5] / sum(HOMEtable[, 5]), digits = 3))
+
+HOMEpercent - PFIpercent 
+
+svymean(~poverty < 3, subset(HOMEdesign, ba_no_ba == 1))
+svymean(~poverty < 3, subset(PFIdesign, SCHTYPE == 1 & ba_no_ba == 1))
+svyttest((poverty < 3) ~ home_public, 
+         subset(PFIdesign, ba_no_ba == 1),
+         na.rm=TRUE)
+
+svymean(~poverty < 3, subset(HOMEdesign, ba_no_ba != 1))
+svymean(~poverty < 3, subset(PFIdesign, SCHTYPE == 1 & ba_no_ba != 1))
+
+svymean(~poverty < 3, HOMEdesign)
+svymean(~poverty < 3, subset(PFIdesign, SCHTYPE == 1))
+
+svymean(~ba_no_ba == 1, subset(HOMEdesign, poverty < 3))
+svymean(~ba_no_ba == 1, subset(PFIdesign, SCHTYPE == 1 & poverty < 3))
+svyttest((ba_no_ba == 1) ~ home_public, 
+         subset(PFIdesign, poverty < 3),
+         na.rm=TRUE)
+
+
+
 
 # ...
 
@@ -227,7 +389,6 @@ svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 2 & elementary_secondary ==
 svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 4 & elementary_secondary == 1))
 svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 4 & elementary_secondary == 2))
 
-
 svyttest((poverty < 3) ~ home_public, 
          subset(PFIdesign, elementary_secondary == 1),
          na.rm=TRUE)
@@ -291,8 +452,9 @@ svyttest((poverty < 3) ~ elementary_secondary,
          subset(HOMEdesign, FIRST == 1),
          na.rm=TRUE)
 
-
-
+svyttest((poverty < 3) ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
 
 # ... 
 
@@ -335,7 +497,9 @@ svyttest((ba_no_ba == 1) ~ home_virtual,
          subset(PFIdesign, elementary_secondary == 2),
          na.rm=TRUE)
 
-
+svyttest((ba_no_ba == 1) ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
 
 
 # DEGREE OR NO DEGREE, BY HOMESCHOOL STATUS
@@ -374,14 +538,6 @@ svyttest((ba_no_ba == 1) ~ elementary_secondary,
 svyttest((ba_no_ba == 1) ~ elementary_secondary, 
          subset(HOMEdesign, FIRST == 1),
          na.rm=TRUE)
-
-
-
-
-
-
-
-
 
 
 # Parent has a bachelor's degree, white homeschooled students
@@ -454,6 +610,35 @@ svyttest((income == 3) ~ elementary_secondary,
 
 svyttest((income == 4) ~ elementary_secondary, 
          subset(PFIdesign, SCHTYPE == 3),
+         na.rm=TRUE)
+
+
+# DEMOGRAPHIC DIFFERENCES THAT ARE STATISTICALLY SIGNIFICANT
+# ELEMENTARY V. SECONDARY
+
+svymean(~(ba_no_ba == 1), subset(PFIdesign, SCHTYPE == 3 & elementary_secondary == 1))
+svymean(~(ba_no_ba == 1), subset(PFIdesign, SCHTYPE == 3 & elementary_secondary == 2))
+
+svyttest((ba_no_ba == 1) ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+# bachelor's degree
+svymean(~(ba_no_ba == 1), subset(HOMEdesign, elementary_secondary == 2 & FIRST == 1))
+svymean(~(ba_no_ba == 1), subset(PFIdesign, elementary_secondary == 2))
+
+PFIdesign <- update(PFIdesign,  homeFirst_public = ifelse(SCHTYPE == 3 &  FIRST == 1, "homeFirst", ifelse(SCHTYPE == 1, "public", NA)))
+
+svyttest((ba_no_ba == 1) ~ homeFirst_public, 
+         subset(PFIdesign, elementary_secondary == 2),
+         na.rm=TRUE)
+
+# SES
+svymean(~(SES == 1), subset(HOMEdesign, elementary_secondary == 2 & FIRST == 1))
+svymean(~(SES == 1), subset(PFIdesign, elementary_secondary == 2))
+
+svyttest((SES == 1) ~ homeFirst_public, 
+         subset(PFIdesign, elementary_secondary == 2),
          na.rm=TRUE)
 
 # END COMPARISON BY SCHOOL LEVEL

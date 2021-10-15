@@ -3,6 +3,103 @@
 
 # YEAR OVER YEAR RETENTION RATE
 
+# Number of children homeschooled in each grade
+round(svytable(~ALLGRADEX, HOMEdesign))
+sum(round(svytable(~ALLGRADEX, HOMEdesign)))
+round(svytable(~ALLGRADEX < 7, HOMEdesign))
+round(svytable(~ALLGRADEX > 6, HOMEdesign))
+
+round(svytable(~ALLGRADEX == 1 | ALLGRADEX == 2 | ALLGRADEX == 3, HOMEdesign))
+round(svytable(~ALLGRADEX == 4 | ALLGRADEX == 5 | ALLGRADEX == 6, HOMEdesign))
+round(svytable(~ALLGRADEX == 7 | ALLGRADEX == 8 | ALLGRADEX == 9, HOMEdesign))
+round(svytable(~ALLGRADEX == 10 | ALLGRADEX == 11 | ALLGRADEX == 12, HOMEdesign))
+
+# see percent in each grade range
+(round(wpct(HOME$grade_range, weight=HOME$FPWT, na.rm=TRUE), digits = 3)*100)
+
+# create a chart for the number of homeschooled children by grade range
+test <- (round(svytable(~grade_range2, subset(HOMEdesign, ALLGRADEX > 0)))/1000)
+barplot(test, main="Number of children homeschooled, by grade range", 
+        ylab = "number in thousands",
+        names.arg = c("1st-2nd", "3rd-4th", "5th-6th", 
+                            "7th-8th", "9th-10th", "11th-12th"))
+
+# create a chart with different age ranges
+other <- (round(svytable(~grade_range, subset(HOMEdesign, ALLGRADEX > 0)))/1000)
+barplot(other, main="Number of children homeschooled, by grade range", 
+        ylab = "number in thousands",
+        names.arg = c("1st-3rd", "4th-6th", "7th-9th", 
+                      "10th-12th"))
+
+round(svytable(~ALLGRADEX, subset(HOMEdesign, FIRST==1)))
+
+# chart for first-year homeschooled students
+cool <- (round((svytable(~grade_range, subset(HOMEdesign, FIRST == 1 & ALLGRADEX > 0)) /
+          svytable(~grade_range, subset(HOMEdesign, ALLGRADEX > 0))), digits = 3)*100)
+barplot(cool, main="Percent of homeschooled children \n currently in their first year of homeschooling", 
+        ylab = "percent",
+        names.arg = c("1st-3rd", "4th-6th", "7th-9th", 
+                      "10th-12th"))
+
+# chart for first-year homeschooled students, other grade ranges
+cool <- (round((svytable(~grade_range2, subset(HOMEdesign, FIRST == 1 & ALLGRADEX > 0)) /
+                  svytable(~grade_range2, subset(HOMEdesign, ALLGRADEX > 0))), digits = 3)*100)
+barplot(cool, main="Percent homeschooled for the first time, by grade range", 
+        ylab = "percent",
+        names.arg = c("1st-2nd", "3rd-4th", "5th-6th", 
+                      "7th-8th", "9th-10th", "11th-12th"))
+
+# SES DIFFERENCES, always, sometimes, first-year
+
+FIR <- subset(HOME, FIRST == 1 & ALLGRADEX > 0)
+SOM <- subset(HOME, ALWAYS == 0 & FIRST == 0)
+ALW <- subset(HOME, ALWAYS == 1)
+
+# High SES
+round(wpct(FIR$SES, weight=FIR$FPWT, na.rm= TRUE), digits = 3)
+round(wpct(SOM$SES, weight=SOM$FPWT, na.rm= TRUE), digits = 3)
+round(wpct(ALW$SES, weight=ALW$FPWT, na.rm= TRUE), digits = 3)
+
+HOMEdesign <- update(HOMEdesign,  
+                     first_always = ifelse(FIRST == 1, "first", 
+                                           ifelse(ALWAYS == 1, "always", NA)))
+HOMEdesign <- update(HOMEdesign,  
+                     first_sometimes = ifelse(FIRST == 1, "first", 
+                                           ifelse(ALWAYS == 0, "sometimes", NA)))
+HOMEdesign <- update(HOMEdesign,  
+                     always_sometimes = ifelse(ALWAYS == 1, "always", 
+                                              ifelse(FIRST == 0, "sometimes", NA)))
+
+svyttest((SES == 1) ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 1) ~ first_sometimes, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 1) ~ always_sometimes, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+svyttest((SES == 2) ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 2) ~ first_sometimes, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 2) ~ always_sometimes, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+svyttest((SES == 3) ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 3) ~ first_sometimes, 
+         HOMEdesign,
+         na.rm=TRUE)
+svyttest((SES == 3) ~ always_sometimes, 
+         HOMEdesign,
+         na.rm=TRUE)
+
 # CREATE a table for years homeschooled and grades, with weighted counts
 YearsTable <- round(svytable(~TOTAL + ALLGRADEX, HOMEdesign))
 YearsTable
@@ -131,7 +228,7 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(ALW$poverty, weight=ALW$FPWT, na.rm= TRUE)
  wpct(LAT$poverty, weight=LAT$FPWT, na.rm= TRUE)
  
- svyttest((poverty == 1) ~ (ALWAYS == 1), 
+ svyttest((poverty == 3) ~ (ALWAYS == 1), 
           HOMEdesign,
           na.rm=TRUE)
 
@@ -171,17 +268,146 @@ LAT <- subset(HOME, ALWAYS == 0)
           HOMEdesign,
           na.rm=TRUE)
  
+# COMPARE HOMESCHOOL K AND PUBLIC SCHOOL K, SES
+
+KGT <- subset(HOME, FIRST == 1 & ALLGRADEX == 0)
+round(wpct(KGT$SES, weight=KGT$FPWT, na.rm= TRUE), digits = 3)
+PSK <- subset(PFI, ALLGRADEX == 0 & SCHTYPE == 1)
+round(wpct(PSK$SES, weight=PSK$FPWT, na.rm= TRUE), digits = 3)
+
+PFIdesign <- update(PFIdesign,  hsK_psK = ifelse(SCHTYPE == 3 & ALLGRADEX == 0, "hsK", ifelse(SCHTYPE == 1 & ALLGRADEX == 0, "psK", NA)))
+
+svyttest(SES == 1 ~ hsK_psK, 
+         PFIdesign,
+         na.rm=TRUE)
+svyttest(SES == 2 ~ hsK_psK, 
+         PFIdesign,
+         na.rm=TRUE)
+svyttest(SES == 3 ~ hsK_psK, 
+         PFIdesign,
+         na.rm=TRUE)
+
 # COMPARE FIRST YEAR ELEMENTARY AND FIRST YEAR SECONDARY STUDENTS
+
+ELM <- subset(HOME, FIRST == 1 & elementary_secondary == 1 & ALLGRADEX > 0)
+SEC <- subset(HOME, FIRST == 1 & elementary_secondary == 2)
+
+ # Low SES or no
+round(wpct(ELM$SES, weight=ELM$FPWT, na.rm= TRUE), digits = 3)
+round(wpct(SEC$SES, weight=SEC$FPWT, na.rm= TRUE), digits = 3)
+
+ svyttest(SES == 1 ~ elementary_secondary, 
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
+          na.rm=TRUE)
+ svyttest(SES == 2 ~ elementary_secondary, 
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
+          na.rm=TRUE)
+ svyttest(SES == 3 ~ elementary_secondary, 
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
+          na.rm=TRUE)
  
- ELM <- subset(HOME, FIRST == 1 & elementary_secondary == 1)
- SEC <- subset(HOME, FIRST == 1 & elementary_secondary == 2)
  
+ # SES, FIRST YEAR HOMESCHOOl v PUBLIC SCHOOl by grade level
+ 
+svymean(~(SES == 1), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+svymean(~(SES == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+ 
+svymean(~(SES == 1), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+svymean(~(SES == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+
+svymean(~(SES == 2), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+svymean(~(SES == 2), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+
+svymean(~(SES == 2), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+svymean(~(SES == 2), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+
+svymean(~(SES == 3), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+svymean(~(SES == 3), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+
+svymean(~(SES == 3), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+svymean(~(SES == 3), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+
+COMBINEDdesign <- update(COMBINEDdesign,  homeF_public = ifelse(SCHTYPE == 3 & ALLGRADEX > 0 & FIRST == 1, "homeF", ifelse(SCHTYPE == 1 & ALLGRADEX > 0, "public", NA)))
+
+svyttest(SES == 1 ~ homeF_public, 
+         subset(COMBINEDdesign, elementary_secondary == 1),
+         na.rm=TRUE)
+svyttest(SES == 1 ~ homeF_public, 
+         subset(COMBINEDdesign, elementary_secondary == 2),
+         na.rm=TRUE)
+
+svyttest(SES == 2 ~ homeF_public, 
+         subset(COMBINEDdesign, elementary_secondary == 1),
+         na.rm=TRUE)
+svyttest(SES == 2 ~ homeF_public, 
+         subset(COMBINEDdesign, elementary_secondary == 2),
+         na.rm=TRUE)
+
+svyttest(SES == 3 ~ homeF_public, 
+         subset(COMBINEDdesign, elementary_secondary == 1),
+         na.rm=TRUE)
+svyttest(SES == 3 ~ homeF_public, 
+         subset(COMBINEDdesign, elementary_secondary == 2),
+         na.rm=TRUE)
+
+# COLLEGE DEGREE, First Year Homeschoolers v. Public School 
+
+svymean(~(ba_no_ba == 1), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+svymean(~(ba_no_ba == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+ 
+svymean(~(ba_no_ba == 1), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+svymean(~(ba_no_ba == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+ 
+ svyttest(ba_no_ba == 1 ~ homeF_public, 
+          COMBINEDdesign,
+          na.rm=TRUE)
+ svyttest(ba_no_ba == 1 ~ homeF_public, 
+          subset(COMBINEDdesign, elementary_secondary == 1),
+          na.rm=TRUE)
+ svyttest(ba_no_ba == 1 ~ homeF_public, 
+          subset(COMBINEDdesign, elementary_secondary == 2),
+          na.rm=TRUE)
+ 
+# Race
+ 
+ svymean(~(white_nonwhite == 1), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+ svymean(~(white_nonwhite == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 1 & ALLGRADEX > 0))
+ 
+ svymean(~(white_nonwhite == 1), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+ svymean(~(white_nonwhite == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+ 
+ COMBINEDdesign <- update(COMBINEDdesign,  first_always = ifelse(SCHTYPE == 3 & ALLGRADEX > 0 & FIRST == 1, "homeF", ifelse(SCHTYPE == 1 & ALLGRADEX > 0, "public", NA)))
+ 
+ svyttest(white_nonwhite == 1 ~ homeF_public, 
+          COMBINEDdesign,
+          na.rm=TRUE)
+ svyttest(white_nonwhite == 1 ~ homeF_public, 
+          subset(COMBINEDdesign, elementary_secondary == 1),
+          na.rm=TRUE)
+ svyttest(white_nonwhite == 1 ~ homeF_public, 
+          subset(COMBINEDdesign, elementary_secondary == 2),
+          na.rm=TRUE)
+ 
+ svyttest(white_nonwhite == 1 ~ elementary_secondary, 
+          HOMEdesign,
+          na.rm=TRUE)
+ 
+ 
+# First year homeschooled students in grades 7-12, high SES
+ svymean(~(SES == 3), subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+ svymean(~(SES == 3), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2 & ALLGRADEX > 0))
+ 
+ svymean(~(SES == 3), HOMEdesign)
+ svymean(~(SES == 3), subset(PFIdesign, SCHTYPE == 1))
+ 
+ 
+# NONE OF THE BELOW IS SIGNIFICANT ANYMORE
  # White or no
  wpct(ELM$white_nonwhite, weight=ELM$FPWT, na.rm= TRUE)
  wpct(SEC$white_nonwhite, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(white_nonwhite ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
  
  # College degree or no 
@@ -189,7 +415,7 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(SEC$ba_no_ba, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(ba_no_ba ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
 
  # Two parent or single parent
@@ -197,7 +423,7 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(SEC$two_parent_or_single, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(two_parent_or_single ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
  
  # Stay at home parent or no
@@ -205,7 +431,7 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(SEC$sahp, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(sahp ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
  
  # Income under the poverty line
@@ -213,7 +439,7 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(SEC$poverty, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(poverty ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
  
  # Food stamps or no
@@ -221,7 +447,7 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(SEC$food_stamps, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(food_stamps ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
  
  # English or no
@@ -229,8 +455,9 @@ LAT <- subset(HOME, ALWAYS == 0)
  wpct(SEC$english_or_no, weight=SEC$FPWT, na.rm= TRUE)
  
  svyttest(english_or_no ~ elementary_secondary, 
-          subset(HOMEdesign, FIRST == 1),
+          subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0),
           na.rm=TRUE)
+
 
 # DEFUNCT: FIRST YEAR v. SOMETIMES v. ALWAYS HOMESCHOOLED STUDENTS
 # demographic differences (elementary and secondary are combined)
@@ -331,26 +558,44 @@ svymean(~returner, HOMEdesign)
 svymean(~returner, subset(HOMEdesign, elementary_secondary == 1))
 svymean(~returner, subset(HOMEdesign, elementary_secondary == 2))
 
+svymean(~SES == 1, subset(HOMEdesign, returner == 1))
+svymean(~SES == 2, subset(HOMEdesign, returner == 1))
+svymean(~SES == 3, subset(HOMEdesign, returner == 1))
+
+svymean(~SES == 1, subset(HOMEdesign, ALWAYS == 1))
+svymean(~SES == 2, subset(HOMEdesign, ALWAYS == 1))
+svymean(~SES == 3, subset(HOMEdesign, ALWAYS == 1))
+
+svymean(~SES == 1, subset(HOMEdesign, FIRST == 1))
+svymean(~SES == 2, subset(HOMEdesign, FIRST == 1))
+svymean(~SES == 3, subset(HOMEdesign, FIRST == 1))
+
+
 # KIDS WITH SIBLINGS IN SCHOOL
 
 svymean(~sibHS, HOMEdesign)
 svymean(~sibENRL, HOMEdesign)
 
-# by length of homeschooling and age
+# by length of homeschooling 
 svymean(~sibENRL, subset(HOMEdesign, ALWAYS == 1))
 svymean(~sibENRL, subset(HOMEdesign, FIRST == 1))
+svyttest(sibENRL ~ first_always, 
+         HOMEdesign,
+         na.rm=TRUE)
 
+# elementary v. secondary
 svymean(~sibENRL, subset(HOMEdesign, elementary_secondary == 1))
 svymean(~sibENRL, subset(HOMEdesign, elementary_secondary == 2))
+svyttest(sibENRL ~ elementary_secondary, 
+         HOMEdesign,
+         na.rm=TRUE)
 
 svymean(~sibENRL, subset(HOMEdesign, FIRST == 1 & elementary_secondary == 2))
 
 # by poverty level
 svymean(~sibENRL, subset(HOMEdesign, poverty == 1))
 svymean(~sibENRL, subset(HOMEdesign, poverty != 1))
-
 HOMEdesign <- update(HOMEdesign,  poverty_no = ifelse(poverty == 1, "poverty", ifelse(poverty != 1, "no", NA)))
-
 svyttest(sibENRL ~ poverty_no, 
          HOMEdesign,
          na.rm=TRUE)
@@ -358,13 +603,25 @@ svyttest(sibENRL ~ poverty_no,
 # by parent education
 svymean(~sibENRL, subset(HOMEdesign, ba_no_ba == 1))
 svymean(~sibENRL, subset(HOMEdesign, ba_no_ba == 2))
-
 svyttest(sibENRL ~ ba_no_ba, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+# by SES
+svymean(~sibENRL, subset(HOMEdesign, SES == 1))
+svymean(~sibENRL, subset(HOMEdesign, SES != 1))
+HOMEdesign <- update(HOMEdesign,  lowSES_no = ifelse(SES == 1, "lowSES", "no"))
+svyttest(sibENRL ~ lowSES_no, 
          HOMEdesign,
          na.rm=TRUE)
 
 # by reasons for homeschooling
 svymean(~sibENRL, subset(HOMEdesign, HSRELGON == 1))
 svymean(~sibENRL, subset(HOMEdesign, HSDISABLX == 1))
+
+svymean(~sibENRL, subset(HOMEdesign, SES == 1))
+svymean(~sibENRL, subset(HOMEdesign, SES == 2))
+svymean(~sibENRL, subset(HOMEdesign, SES == 3))
+
 
 # END SCRIPT

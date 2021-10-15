@@ -4,6 +4,10 @@
 EL_HS <- subset(HOME, SCHTYPE == 3 & elementary_secondary == 1)
 SEC_HS <- subset(HOME, SCHTYPE == 3 & elementary_secondary == 2)
 
+#New homedesign objects
+
+HOMEdesign <- update(HOMEdesign,  rel_no = ifelse(HSRELGON==1, "rel", "no"))
+
 
 # Reasons for homeschooling
 
@@ -256,7 +260,6 @@ svyttest((disability == 1) ~ elementary_secondary,
          na.rm=TRUE)
 
 
-
 # Average number of reasons selected for homeschooling
 # question: how much do religious and moral reasons for homeschooling overlap?
 
@@ -327,6 +330,22 @@ model <- lm((numberR) ~
 summary(model)
 
 # comparisons between religious and nonreligious homeschoolers
+svymean(~SES==1, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
+svymean(~SES==1, subset(HOMEdesign, HSRELGON != 1), na.rm=TRUE)
+svyttest((SES==1) ~ rel_no, 
+         HOMEdesign,
+         na.rm=TRUE)
+svymean(~SES==2, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
+svymean(~SES==2, subset(HOMEdesign, HSRELGON != 1), na.rm=TRUE)
+svyttest((SES==2) ~ rel_no, 
+         HOMEdesign,
+         na.rm=TRUE)
+svymean(~SES==3, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
+svymean(~SES==3, subset(HOMEdesign, HSRELGON != 1), na.rm=TRUE)
+svyttest((SES==3) ~ rel_no, 
+         HOMEdesign,
+         na.rm=TRUE)
+
 svymean(~HSSAFETYX==1, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
 svymean(~HSSAFETYX==1, subset(HOMEdesign, HSRELGON != 1), na.rm=TRUE)
 svyttest((HSSAFETYX==1) ~ rel_no, 
@@ -473,9 +492,6 @@ svymean(~white_nonwhite == 1, subset(HOMEdesign, HSRELGON!=1 & TOTAL > 3))
 
 
 
-
-
-
 # What percent of religious people selected moral reasons for homeschooling
 svymean(~HSMORAL == 1, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
 
@@ -506,8 +522,6 @@ svyttest((HSMOSTX == 5 | HSMOSTX == 6 | HSMOSTX == 7) ~ always_some,
 # Disabilities, by whether parents have religious reasons for homeschooling
 svymean(~disability == 1, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
 svymean(~disability == 1, subset(HOMEdesign, HSRELGON != 1), na.rm=TRUE)
-
-HOMEdesign <- update(HOMEdesign,  rel_no = ifelse(HSRELGON==1, "rel", "no"))
 
 svyttest((disability == 1) ~ rel_no, 
          HOMEdesign,

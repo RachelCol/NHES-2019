@@ -27,8 +27,12 @@
 # install.packages("ggplot2")
 # install.packages("xlsx")
 # install.packages("tidyr")
+# install.packages("cluster")
+# install.packages("Rtsne")
+install.packages("klaR")
 # remotes::install_github("carlganz/svrepmisc")
 
+library(klaR)
 library("tables")
 library("haven")
 library("survey")
@@ -44,6 +48,8 @@ library("tibble")
 library("ggplot2")
 library("xlsx")
 library("tidyr")
+library("cluster")
+library("Rtsne")
 
 load(file = "pfi_pu_pert.RData")
 
@@ -551,6 +557,9 @@ HOME$enrolled <- ifelse(HOME$school == 1, 1,
                                              ifelse(HOME$school == 3, 3,
                                                     ifelse(HOME$also == 3, 3,
                                                                   NA))))))
+
+HOME$length <- ifelse(HOME$ALWAYS == 1, 1,
+                      ifelse(HOME$ALWAYS == 0 & HOME$FIRST == 0, 2, 3))
 
 # END creation of enrolled object
 
