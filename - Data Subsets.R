@@ -29,7 +29,7 @@
 # install.packages("tidyr")
 # install.packages("cluster")
 # install.packages("Rtsne")
-install.packages("klaR")
+# install.packages("klaR")
 # remotes::install_github("carlganz/svrepmisc")
 
 library(klaR)
@@ -312,6 +312,9 @@ PFI$condition <- ifelse((PFI$HDINTDIS == 1 | PFI$HDSPEECHX == 1 | PFI$HDDISTRBX 
                         PFI$HDADDX == 1 | PFI$HDDELAYX == 1 | PFI$HDTRBRAIN == 1 | 
                         PFI$HDOTHERX == 1), 1, 0) 
 
+PFI$IEP <- ifelse(PFI$HDIEPX == 1, 1, 0)
+PFI$IEP[is.na(PFI$IEP)] <- 0
+
 # May want to add a column comparing virtual v. non-virtual
 
 # For general PFI data file, input details into survey package
@@ -560,8 +563,66 @@ HOME$enrolled <- ifelse(HOME$school == 1, 1,
 
 HOME$length <- ifelse(HOME$ALWAYS == 1, 1,
                       ifelse(HOME$ALWAYS == 0 & HOME$FIRST == 0, 2, 3))
-
 # END creation of enrolled object
+
+# CREATE new data frame to calculate total number of PHYSICAL sources
+curriculum <- as.data.frame(c(1:490))
+curriculum$library <- ifelse(HOME$HSCLIBRX == 1, 1, 0)
+curriculum$publisher <- ifelse(HOME$HSCHSPUBX == 1, 1, 0)
+curriculum$public_school <- ifelse(HOME$HSCPUBLX == 1, 1, 0)
+curriculum$convention <- ifelse(HOME$HSCCNVX == 1, 1, 0)
+curriculum$swap <- ifelse(HOME$HSCEVTX == 1, 1, 0)
+curriculum$family <- ifelse(HOME$HSCFMLY == 1, 1, 0)
+curriculum$all_hs <- ifelse(curriculum$convention == 1, 1,
+                            ifelse(curriculum$swap == 1, 1,
+                                   ifelse(curriculum$family == 1, 1, 0)))
+curriculum$total <- curriculum$library + curriculum$publisher + 
+  curriculum$public_school + curriculum$all_hs
+# CREATE new column in homeschool data set
+HOME$total_curr <- curriculum$total
+# END this project of creation
+
+# create variable for family member other than mother providing instruction
+HOME$other_family <- ifelse(HOME$HSWHOX == 2 | HOME$HSWHOX == 3 | HOME$HSWHOX == 4, 1, 0)
+
+# CREATE new data frame to calculate total number of ONLINE sources
+online <- as.data.frame(c(1:490))
+
+online$library <- ifelse(HOME$HSINTLIB == 1, 1, 0)
+online$publisher <- ifelse(HOME$HSINTCAT == 1, 1, 0)
+online$public_school <- ifelse(HOME$HSINTSCH == 1, 1, 0)
+online$free <- ifelse(HOME$HSINTFRWB == 1, 1, 0)
+online$online <- ifelse(HOME$HSINTWEB == 1, 1, 0)
+
+online$total <- online$library + online$publisher + 
+  online$public_school + online$free + online$online
+# CREATE new column in homeschool data set
+HOME$total_onl <- online$total
+# END this project of creation
+
+# CREATE new data frame for number of sources for ONLINE courses
+course <- as.data.frame(c(1:490))
+
+course$public_school <- ifelse(HOME$HSINTPUB == 1, 1, 0)
+course$private <- ifelse(HOME$HSINTPRI == 1, 1, 0)
+course$college <- ifelse(HOME$HSINTCOL == 1, 1, 0)
+course$academy <- ifelse(HOME$HSINTVRT == 1, 1, 0)
+course$company <- ifelse(HOME$HSINTCMP == 1, 1, 0)
+course$another <- ifelse(HOME$HSINTK12 == 1, 1, 0)
+course$independent <- ifelse(HOME$HSINTIND == 1, 1, 0)
+course$other <- ifelse(HOME$HSINTOH == 1, 1, 0)
+
+course$total <- course$public_school + course$private + 
+  course$college + course$academy + course$company + 
+  course$another + course$independent + course$other 
+# CREATE new column in homeschool data set
+HOME$total_course_source <- course$total
+# END this project of creation
+
+# these are both for summary homeschooling methods calculations
+HOME$SES2 <- ifelse(HOME$SES == 3, 1, 0)
+HOME$HSSTYL2 <- ifelse(HOME$HSSTYL == 1, 1, 
+                       ifelse(HOME$HSSTYL == 2, 2, 3))
 
 # HAVE CREATED ALL NEW VALUES AT THIS POINT
 # if need to create new values, add here, before creating design object!
