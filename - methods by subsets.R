@@ -1,4 +1,6 @@
 # HOMESCHOOLING METHODS
+# this adds a lot by subsets
+# it is PART II, after "Homeschooling Methods"
 
 # NEW DIVISION, ONLY SES & ALWAYS v. TRANSFER
 

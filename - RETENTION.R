@@ -623,5 +623,170 @@ svymean(~sibENRL, subset(HOMEdesign, SES == 1))
 svymean(~sibENRL, subset(HOMEdesign, SES == 2))
 svymean(~sibENRL, subset(HOMEdesign, SES == 3))
 
+# Each calculation, as percent of hsing parents w/ a child in public school
+svymean(~SES != 3, subset(HOMEdesign, sibENRL == 1))
+svymean(~elementary_secondary != 1, subset(HOMEdesign, sibENRL == 1))
+svymean(~ALWAYS != 1, subset(HOMEdesign, sibENRL == 1))
 
-# END SCRIPT
+svymean(~sibENRL, subset(HOMEdesign, SES == 1 & elementary_secondary != 1 & ALWAYS != 1))
+svymean(~sibENRL, subset(HOMEdesign, SES == 1 & ALLGRADEX == 7 & ALWAYS != 1))
+
+
+svymean(~sibENRL, subset(HOMEdesign, SES != 3 & ALWAYS != 1))
+
+svymean(~sibENRL, subset(HOMEdesign, elementary_secondary != 1 & ALWAYS != 1))
+
+svymean(~sibENRL, subset(HOMEdesign, SES != 3 & elementary_secondary != 1))
+
+svymean(~sibENRL, subset(HOMEdesign, SES == 3 & ALWAYS != 1))
+
+svymean(~sibENRL, subset(HOMEdesign, SES != 3))
+
+
+# CREATE DATA SET for regression, SIBLINGS ENROLLED IN SCHOOL
+
+SIB <- HOME
+# turn relevant columns into integers
+SIB$ALWAYS <- as.integer(SIB$ALWAYS)
+SIB$DISABILITY <- as.integer(SIB$DISABILITY)
+SIB$SES <- as.integer(SIB$SES)
+SIB$elementary_secondary <- as.integer(SIB$elementary_secondary)
+SIB$sibENRL <- as.integer(SIB$sibENRL)
+SIB$FIRST <- as.integer(SIB$FIRST)
+
+# CREATE design object from new data set
+SIBdesign <- svrepdesign(
+  data = SIB, 
+  repweights = subset(SIB, select = FPWT1:FPWT80), 
+  weights= ~FPWT, type="JK1", mse=TRUE, combined.weights=TRUE, 
+  scale=79/80)
+summary(SIBdesign)
+
+# run regressions
+summary(svyglm((sibENRL) ~ ALWAYS + (SES==1) + elementary_secondary, 
+               family=quasibinomial, SIBdesign))
+
+summary(svyglm((sibENRL) ~ ALWAYS + (SES==1), 
+               family=quasibinomial, SIBdesign))
+
+summary(svyglm((sibENRL) ~ ALWAYS + (SES==1) + ALWAYS*(SES==1), 
+               family=quasibinomial, SIBdesign))
+
+summary(svyglm((sibENRL) ~ (ALWAYS!=1) + (SES==1) + (ALWAYS!=1)*(SES==1), 
+               family=quasibinomial, SIBdesign)) # THIS IS THE ONE
+
+summary(svyglm((sibENRL) ~ (ALWAYS!=1) + (SES==1), 
+               family=quasibinomial, SIBdesign)) # actually, do this one!
+
+summary(svyglm((sibENRL) ~ (SES==1) + FIRST, 
+               family=quasibinomial, SIBdesign))
+
+
+invlogit <- function(x) {1/(1+exp(-x))}
+
+invlogit(-2.36)
+# effect of ALWAYS!=1, yes or no
+invlogit(-2.36+1.34*1) - invlogit(-2.36+1.34*0)
+# effect of SES==1, yes or no
+invlogit(-2.36+1.32*1) - invlogit(-2.36+1.32*0)
+
+
+
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
+logit2prob(1.34)
+
+# effect of ALWAYS!=1, yes or no
+logit2prob(-2.36+1.34*1) - logit2prob(-2.36+1.34*0)
+
+
+-2.36+1.34*(x)+1.31*(y)
+
+# homeschool transfer, low income
+-2.36+1.34*(1)+1.31*(1)
+# homeschool transfer, NOT low income
+-2.36+1.34*(1)+1.31*(0)
+# NOT homeschool transfer, low income
+-2.36+1.34*(0)+1.31*(1)
+# NOT homeschool transfer, NOT low income
+-2.36+1.34*(0)+1.31*(0)
+
+
+invlogit(0.29)
+invlogit(-1.02)
+invlogit(-1.05)
+invlogit(-2.36)
+
+invlogit(-1.40+0.33*3) - invlogit(-1.40+0.33*2)
+
+
+1/(1+exp(1.34))
+1/(1+exp(-2.36))
+
+
+# DELETE THE REMAINDER
+svymean(~sibENRL==1, subset(HOMEdesign, SES == 1))
+svymean(~sibENRL==1, subset(HOMEdesign, ALWAYS != 1))
+svymean(~sibENRL==1, subset(HOMEdesign, SES == 1 & ALWAYS != 1))
+svymean(~sibENRL==1, subset(HOMEdesign, SES == 1 & ALWAYS == 1))
+
+svymean(~sibENRL==1, subset(HOMEdesign, SES != 3 & ALWAYS != 1))
+svymean(~sibENRL==1, subset(HOMEdesign, SES != 3))
+
+svymean(~sibENRL==1, subset(HOMEdesign, SES == 1 & ALWAYS != 1 & elementary_secondary==2))
+
+svymean(~sibENRL==1, subset(HOMEdesign, SES == 3))
+svymean(~sibENRL==1, subset(HOMEdesign, ALWAYS == 1))
+svymean(~sibENRL==1, subset(HOMEdesign, ALWAYS == 1 & SES != 1))
+
+
+svymean(~SES == 1, subset(HOMEdesign, sibENRL==1))
+svymean(~SES == 2, subset(HOMEdesign, sibENRL==1))
+svymean(~SES == 3, subset(HOMEdesign, sibENRL==1))
+
+
+round(svytable(~SES + sibENRL, HOMEdesign))
+
+part <- subset(HOME, SES == 1)
+(round(wpct(part$sibENRL, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, SES == 2)
+(round(wpct(part$sibENRL, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, SES == 3)
+(round(wpct(part$sibENRL, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+
+
+part <- subset(HOME, returners == 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, ALWAYS == 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, ALWAYS != 1 & returners != 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+
+svymean(~sibENRL == 1, subset(HOMEdesign, SES==1 & ALWAYS!=1 & NUMSIBSX!=0))
+
+svymean(~NUMSIBSX != 0, subset(HOMEdesign, SES==3 & ALWAYS==1))
+
+part <- subset(HOME, sibENRL == 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, ALWAYS == 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, ALWAYS != 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+part <- subset(HOME, sibENRL != 1)
+(round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)*100)
+
+
+
+
+
+
+NUMSIBSX
+
+
+
+
+1# END SCRIPT

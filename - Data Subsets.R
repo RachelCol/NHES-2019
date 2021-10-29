@@ -315,6 +315,20 @@ PFI$condition <- ifelse((PFI$HDINTDIS == 1 | PFI$HDSPEECHX == 1 | PFI$HDDISTRBX 
 PFI$IEP <- ifelse(PFI$HDIEPX == 1, 1, 0)
 PFI$IEP[is.na(PFI$IEP)] <- 0
 
+PFI$FUTUREX <- ifelse(PFI$SEFUTUREX == 1, 1,
+                      ifelse(PFI$SEFUTUREX == 2, 2, 
+                             ifelse(PFI$SEFUTUREX == 3 | PFI$SEFUTUREX == 4, 3,
+                                    ifelse(PFI$SEFUTUREX == 5, 4,
+                                           ifelse(PFI$SEFUTUREX == 6, 5, NA)))))
+
+PFI$home_public <- ifelse(PFI$SCHTYPE == 3, 1, 
+                          ifelse(PFI$SCHTYPE == 1, 2, NA)) 
+PFI$DISABILITY <- ifelse(PFI$HDIEPX == 1 & PFI$SCHTYPE == 1, 1,
+                         ifelse((PFI$HSDISABLX == 1 | PFI$HSILLX == 1 | PFI$HSSPCLNDX == 1) & PFI$SCHTYPE == 3, 1, 0))
+PFI$DISABILITY[is.na(PFI$DISABILITY)] <- 0
+
+table(PFI$DISABILITY, PFI$SCHTYPE)
+
 # May want to add a column comparing virtual v. non-virtual
 
 # For general PFI data file, input details into survey package
@@ -624,6 +638,9 @@ HOME$SES2 <- ifelse(HOME$SES == 3, 1, 0)
 HOME$HSSTYL2 <- ifelse(HOME$HSSTYL == 1, 1, 
                        ifelse(HOME$HSSTYL == 2, 2, 3))
 
+# first year they homeschooled
+HOME$FIRSTyr <- HOME$ALLGRADEX - HOME$TOTAL + 1
+
 # HAVE CREATED ALL NEW VALUES AT THIS POINT
 # if need to create new values, add here, before creating design object!
 
@@ -640,7 +657,7 @@ summary(HOMEdesign)
 
 # MERGE DATA SETS for certain functions
 
-# COMBINED <- merge(PFI, HOME, all = TRUE, sort = TRUE)
+COMBINED <- merge(PFI, HOME, all = TRUE, sort = TRUE)
 
 COMBINEDdesign <- svrepdesign(
   data = COMBINED, 

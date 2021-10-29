@@ -641,4 +641,30 @@ svyttest((SES == 1) ~ homeFirst_public,
          subset(PFIdesign, elementary_secondary == 2),
          na.rm=TRUE)
 
+
+# SES, homeschool v. public school, K-6 and 7-12
+
+# High SES
+
+part <- subset(PFI, SCHTYPE == 3 & ALLGRADEX < 6)
+round(wpct(part$SES, weight=part$FPWT, na.rm= TRUE), digits = 3)
+
+part <- subset(PFI, SCHTYPE == 3 & (ALLGRADEX == 6 | ALLGRADEX == 7 | ALLGRADEX == 8))
+round(wpct(part$SES, weight=part$FPWT, na.rm= TRUE), digits = 3)
+
+part <- subset(PFI, SCHTYPE == 3 & ALLGRADEX > 8)
+round(wpct(part$SES, weight=part$FPWT, na.rm= TRUE), digits = 3)
+
+# coefficient of variance
+cv(svymean(~(SES==1), subset(PFIdesign, SCHTYPE==3 & ALLGRADEX < 6)))
+cv(svymean(~(SES==1), subset(PFIdesign, SCHTYPE==3 & (ALLGRADEX == 6 | ALLGRADEX == 7 | ALLGRADEX == 8))))
+cv(svymean(~(SES==1), subset(PFIdesign, SCHTYPE==3 & ALLGRADEX > 8)))
+cv(svymean(~(SES==2), subset(PFIdesign, SCHTYPE==3 & ALLGRADEX < 6)))
+cv(svymean(~(SES==2), subset(PFIdesign, SCHTYPE==3 & (ALLGRADEX == 6 | ALLGRADEX == 7 | ALLGRADEX == 8))))
+cv(svymean(~(SES==2), subset(PFIdesign, SCHTYPE==3 & ALLGRADEX > 8)))
+cv(svymean(~(SES==3), subset(PFIdesign, SCHTYPE==3 & ALLGRADEX < 6)))
+cv(svymean(~(SES==3), subset(PFIdesign, SCHTYPE==3 & (ALLGRADEX == 6 | ALLGRADEX == 7 | ALLGRADEX == 8))))
+cv(svymean(~(SES==3), subset(PFIdesign, SCHTYPE==3 & ALLGRADEX > 8)))
+
+
 # END COMPARISON BY SCHOOL LEVEL

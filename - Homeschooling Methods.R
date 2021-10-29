@@ -1,4 +1,6 @@
 # Homeschooling Methods
+# this uses demographics, but not subsets
+# it is PART I, followed by "methods by subsets"
 
 PFIdesign <- update(PFIdesign,  home_public = ifelse(SCHTYPE==3, "home", ifelse(SCHTYPE==1, "public", NA)))
 HOMEdesign <- update(HOMEdesign,  low_high = ifelse(SES == 1, "low", ifelse(SES == 3, "high", NA)))

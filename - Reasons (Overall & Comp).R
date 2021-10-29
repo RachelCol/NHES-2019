@@ -189,7 +189,6 @@ svyttest((HSBULLY == 1) ~ elementary_secondary,
          na.rm=TRUE)
 
 
-
 # Most important reason: HSMOSTX
 
 # All homeschooled students
@@ -580,9 +579,6 @@ svymean(~HSRELGON==1, subset(HOMEdesign, elementary_secondary==1))
 svymean(~HSRELGON==1, subset(HOMEdesign, elementary_secondary==2))
 
 
-
-
-
 # demo: RACE: what percent of kids who select this reason are white?
 svymean(~white_nonwhite == 1, subset(PFIdesign, SCHTYPE == 1), na.rm=TRUE) # public school
 svymean(~white_nonwhite == 1, subset(HOMEdesign, HSRELGON == 1), na.rm=TRUE)
@@ -803,8 +799,6 @@ svyttest((HSRELGON == 1) ~ elementary_secondary,
          na.rm=TRUE)
 
 
-
-
 # white children and college degrees, religion
 svymean(~ba_no_ba == 1, 
         subset(HOMEdesign, white_nonwhite == 1 & HSRELGON == 1), na.rm=TRUE)
@@ -945,9 +939,6 @@ table(HOME$HSMOSTX == 8, HOME$HSSTYL > 2)
 # end analysis of nontraditional/alternative education
 
 
-
-
-
 # Nonwhite homeschoolers with religious motivations
 
 svymean(~ba_no_ba == 1, subset(HOMEdesign, white_nonwhite == 2 & HSRELGON == 1))
@@ -959,9 +950,7 @@ svymean(~ba_no_ba == 1, subset(HOMEdesign, elementary_secondary == 2 & white_non
 
 svymean(~HSRELGON == 1, subset(HOMEdesign, elementary_secondary == 1 & white_nonwhite == 2))
 
-
 svymean(~ba_no_ba == 1, subset(HOMEdesign, white_nonwhite == 2))
-
 
 svymean(~HSSTYL > 2, subset(HOMEdesign, ba_no_ba == 1))
 svymean(~HSSTYL > 2, subset(HOMEdesign, ba_no_ba == 2))
@@ -973,13 +962,341 @@ svymean(~HSSTYL > 2, subset(HOMEdesign, ba_no_ba == 2))
 svymean(~HSDISSATX == 1, subset(HOMEdesign, HSRELGON == 2 & ba_no_ba == 1 & HSSTYL > 2))
 
 
-
 # what about HSMOSTX parents?
 svymean(~HSSTYL > 3, 
         subset(HOMEdesign, HSMOSTX == 8), na.rm=TRUE)
 
 
+# CREATE GGPLOT on religious v. no homeschoolers by grade level
 
 
+svymean(~ALLGRADEX<6, subset(HOMEdesign, HSRELGON==1))
+svymean(~ALLGRADEX<6, subset(HOMEdesign, HSRELGON!=1))
+svymean(~ALLGRADEX==6 | ALLGRADEX==7 | ALLGRADEX == 8, subset(HOMEdesign, HSRELGON==1))
+svymean(~ALLGRADEX==6 | ALLGRADEX==7 | ALLGRADEX == 8, subset(HOMEdesign, HSRELGON!=1))
+svymean(~ALLGRADEX>8, subset(HOMEdesign, HSRELGON==1))
+svymean(~ALLGRADEX>8, subset(HOMEdesign, HSRELGON!=1))
+
+svymean(~HSRELGON==1, subset(HOMEdesign, ALLGRADEX<6)) # 65.5%
+svymean(~HSRELGON!=1, subset(HOMEdesign, ALLGRADEX<6)) # 34.5%
+svymean(~HSRELGON==1, subset(HOMEdesign, ALLGRADEX==6 | ALLGRADEX==7 | ALLGRADEX == 8)) # 58.3%
+svymean(~HSRELGON!=1, subset(HOMEdesign, ALLGRADEX==6 | ALLGRADEX==7 | ALLGRADEX == 8)) # 41.7#
+svymean(~HSRELGON==1, subset(HOMEdesign, ALLGRADEX>8)) # 42.9%
+svymean(~HSRELGON!=1, subset(HOMEdesign, ALLGRADEX>8)) # 57.1%
+
+# library
+library(ggplot2)
+
+# create a dataset
+Grades <- c(rep("Grades K-6" , 2) , rep("Grades 6-8" , 2) , rep("Grades 9-12" , 2) )
+Motivations <- rep(c("religious reasons" , "no religious reasons") , 3)
+Percent <- c(65.5, 34.5, 58.3, 41.7, 42.9, 57.1)
+data <- data.frame(grades,motivations,value)
+
+data$grades <- factor(data$grades,levels = c("Grades K-6", "Grades 6-8", "Grades 9-12"))
+
+# Stacked + percent
+ggplot(data, aes(fill=motivations, y=value, x=grades)) + 
+        geom_bar(position="fill", stat="identity") + 
+        ggtitle("Religious motivations, as a percent of homeschooling") +
+        xlab("children's grade level") + ylab("percent")
+
+
+# CREATE DATA SET for regression, DISABILITIES AS A MOTIVATION
+
+DIS <- HOME
+# turn relevant columns into integers
+DIS$ALWAYS <- as.integer(DIS$ALWAYS)
+DIS$DISABILITY <- as.integer(DIS$DISABILITY)
+DIS$SES <- as.integer(DIS$SES)
+DIS$elementary_secondary <- as.integer(DIS$elementary_secondary)
+DIS$sibENRL <- as.integer(DIS$sibENRL)
+DIS$FIRST <- as.integer(DIS$FIRST)
+DIS$PARGRADEX <- as.integer(DIS$PARGRADEX)
+DIS$poverty <- as.integer(DIS$poverty)
+
+# CREATE design object from new data set
+DISdesign <- svrepdesign(
+        data = DIS, 
+        repweights = subset(DIS, select = FPWT1:FPWT80), 
+        weights= ~FPWT, type="JK1", mse=TRUE, combined.weights=TRUE, 
+        scale=79/80)
+summary(DISdesign)
+
+# run regressions
+summary(svyglm((DISABILITY) ~ poverty + PARGRADEX + poverty*PARGRADEX, 
+               family=quasibinomial, DISdesign))
+
+summary(svyglm((DISABILITY) ~ (poverty==3) + (PARGRADEX>3), 
+               family=quasibinomial, DISdesign))
+
+summary(svyglm((DISABILITY) ~ (poverty==1) + (PARGRADEX>3), 
+               family=quasibinomial, DISdesign))
+
+invlogit <- function(x) {1/(1+exp(-x))}
+
+invlogit(-2.36)
+# effect of ALWAYS!=1, yes or no
+invlogit(-2.36+1.34*1) - invlogit(-2.36+1.34*0)
+# effect of SES==1, yes or no
+invlogit(-2.36+1.32*1) - invlogit(-2.36+1.32*0)
+
+
+# OTHER NEW THINGS
+
+svymean(~HSDISSATX==1, subset(HOMEdesign, poverty == 1 & PARGRADEX<4 & elementary_secondary==2))
+svymean(~(poverty == 1 & PARGRADEX<4 & elementary_secondary==2), HOMEdesign)
+cv(svymean(~HSDISSATX==1, subset(HOMEdesign, poverty == 1 & PARGRADEX<4 & elementary_secondary==2)))
+
+svymean(~HSDISSATX==1, subset(HOMEdesign, poverty == 1 & elementary_secondary==2))
+svymean(~HSDISSATX==1, subset(HOMEdesign, poverty == 1 & elementary_secondary==1))
+
+
+# Religious homeschooling and SES 
+
+part <- subset(HOME, HSRELGON == 1)
+round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)
+part <- subset(HOME, HSRELGON != 1)
+round(wpct(part$SES, weight=part$FPWT, na.rm=TRUE), digits = 3)
+
+
+REL <- HOME
+# turn relevant columns into integers
+REL$ALWAYS <- as.integer(REL$ALWAYS)
+REL$DISABILITY <- as.integer(REL$DISABILITY)
+REL$SES <- as.integer(REL$SES)
+REL$elementary_secondary <- as.integer(REL$elementary_secondary)
+REL$FIRST <- as.integer(REL$FIRST)
+REL$PARGRADEX <- as.integer(REL$PARGRADEX)
+REL$HSRELGON <- as.integer(REL$HSRELGON)
+REL$poverty <- as.integer(REL$poverty)
+
+# CREATE design object from new data set
+RELdesign <- svrepdesign(
+        data = REL, 
+        repweights = subset(REL, select = FPWT1:FPWT80), 
+        weights= ~FPWT, type="JK1", mse=TRUE, combined.weights=TRUE, 
+        scale=79/80)
+summary(RELdesign)
+
+# run regressions
+summary(svyglm((HSRELGON==1) ~ ALWAYS + (PARGRADEX>3), 
+               family=quasibinomial, RELdesign))
+
+summary(svyglm((HSRELGON==1) ~ ALWAYS + (PARGRADEX>3) + (SES==3), 
+               family=quasibinomial, RELdesign))
+
+summary(svyglm((HSRELGON==1) ~ PARGRADEX + poverty, 
+               family=quasibinomial, RELdesign)) # THIS ONE!
+
+summary(svyglm((HSRELGON==1) ~ (PARGRADEX>3) + (poverty==3), 
+               family=quasibinomial, RELdesign))
+
+summary(svyglm((HSRELGON==1) ~ PARGRADEX, 
+               family=quasibinomial, RELdesign))
+
+invlogit <- function(x) {1/(1+exp(-x))}
+
+# find the central point, the mean
+svymean(~PARGRADEX, HOMEdesign)
+invlogit (-1.16 + 0.45*3.37)
+# how the probability differs with a unit difference in x near hte central value
+invlogit(-1.16 + 0.45*4) - invlogit(-1.16 + 0.45*3)
+
+invlogit(-1.16 + 0.45*1)
+invlogit(-1.16 + 0.45*2)
+invlogit(-1.16 + 0.45*3)
+invlogit(-1.16 + 0.45*4)
+invlogit(-1.16 + 0.45*5)
+
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX == 1))
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX == 2))
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX == 3))
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX == 4))
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX == 5))
+
+svymean(~PARGRADEX==1, subset(HOMEdesign, HSRELGON == 1))
+svymean(~PARGRADEX==1, subset(HOMEdesign, HSRELGON != 1))
+svymean(~PARGRADEX==2, subset(HOMEdesign, HSRELGON == 1))
+svymean(~PARGRADEX==2, subset(HOMEdesign, HSRELGON != 1))
+svymean(~PARGRADEX==3, subset(HOMEdesign, HSRELGON == 1))
+svymean(~PARGRADEX==3, subset(HOMEdesign, HSRELGON != 1))
+svymean(~PARGRADEX==4, subset(HOMEdesign, HSRELGON == 1))
+svymean(~PARGRADEX==4, subset(HOMEdesign, HSRELGON != 1))
+svymean(~PARGRADEX==5, subset(HOMEdesign, HSRELGON == 1))
+svymean(~PARGRADEX==5, subset(HOMEdesign, HSRELGON != 1))
+svymean(~PARGRADEX>3, subset(HOMEdesign, HSRELGON == 1))
+svymean(~PARGRADEX>3, subset(HOMEdesign, HSRELGON != 1))
+
+svymean(~poverty==3, subset(HOMEdesign, HSRELGON == 1 & PARGRADEX>3))
+svymean(~poverty==3, subset(HOMEdesign, HSRELGON != 1 & PARGRADEX>3))
+
+
+
+
+invlogit(-1.00)
+# effect of PARGRADEX>3 or no
+invlogit(-0.15+.96*1) - invlogit(-0.15+.96*0)
+
+invlogit(-1.00+.48*4-0.11*3)
+invlogit(-1.00+.48*4-0.11*2)
+invlogit(-1.00+.48*4-0.11*1)
+
+invlogit(-0.11 + 1 - .1)
+invlogit(-0.11 + 1 - 0)
+
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX>3 & (poverty==3)))
+svymean(~HSRELGON==1, subset(HOMEdesign, PARGRADEX>3 & (poverty!=3)))
+svymean(~HSRELGON==1, subset(HOMEdesign, SES==3))
+
+table(HOME$SES, HOME$PARGRADEX)
+table(HOME$poverty, HOME$PARGRADEX)
+
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==3))
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty!=3))
+
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==3 & PARGRADEX>3))
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty!=3 & PARGRADEX>3))
+
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==1 & PARGRADEX>3))
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==2 & PARGRADEX>3))
+
+
+# THIS IS IMPORTANT
+svymean(~sahp==1, subset(HOMEdesign, HSRELGON==1 & PARGRADEX>3), na.rm=TRUE)
+svymean(~sahp==1, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX>3), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX>3), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX>3), na.rm=TRUE)
+
+svymean(~sahp==1, subset(HOMEdesign, HSRELGON==1 & PARGRADEX<4), na.rm=TRUE)
+svymean(~sahp==1, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX<4), na.rm=TRUE)
+
+svymean(~sahp==1, subset(HOMEdesign, HSRELGON==1), na.rm=TRUE)
+svymean(~sahp==1, subset(HOMEdesign, HSRELGON!=1), na.rm=TRUE)
+
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==3), na.rm=TRUE)
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty!=3), na.rm=TRUE)
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==2), na.rm=TRUE)
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty!=2), na.rm=TRUE)
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty==1), na.rm=TRUE)
+svymean(~HSRELGON==1, subset(HOMEdesign, poverty!=1), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX==1), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX==1), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX==2), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX==2), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX==3), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX==3), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX==4), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX==4), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX==5), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX==5), na.rm=TRUE)
+
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON==1 & PARGRADEX>3), na.rm=TRUE)
+svymean(~poverty!=3, subset(HOMEdesign, HSRELGON!=1 & PARGRADEX>3), na.rm=TRUE)
+svymean(~poverty!=3, subset(PFIdesign, SCHTYPE==1 & PARGRADEX>3), na.rm=TRUE)
+
+svymean(~sibENRL==1, HOMEdesign)
+svymean(~sibENRL==1, subset(HOMEdesign, HSRELGON==1))
+svymean(~sibENRL==1, subset(HOMEdesign, HSRELGON!=1))
+
+svymean(~elementary_secondary==1, subset(HOMEdesign, HSRELGON==1))
+svymean(~elementary_secondary==1, subset(HOMEdesign, HSRELGON!=1))
+
+svymean(~PARGRADEX>3, subset(HOMEdesign, HSRELGON==1))
+svymean(~PARGRADEX>3, subset(HOMEdesign, HSRELGON!=1))
+svymean(~PARGRADEX>3, subset(PFIdesign, SCHTYPE==1))
+
+svymean(~PARGRADEX==1, subset(HOMEdesign, HSRELGON==1))
+svymean(~PARGRADEX==1, subset(HOMEdesign, HSRELGON!=1))
+svymean(~PARGRADEX==1, subset(PFIdesign, SCHTYPE==1))
+
+svymean(~ALWAYS==1, subset(HOMEdesign, HSRELGON==1 & elementary_secondary==1))
+svymean(~ALWAYS==1, subset(HOMEdesign, HSRELGON!=1 & elementary_secondary==1))
+
+svymean(~ALWAYS==1, subset(HOMEdesign, HSRELGON==1 & elementary_secondary==2))
+svymean(~ALWAYS==1, subset(HOMEdesign, HSRELGON!=1 & elementary_secondary==2))
+
+
+
+
+# some work on low/middle SES homeschoolers and religion and unschooling (maybe)
+svymean(~HSSTYL > 2, subset(HOMEdesign, HSRELGON == 1 & SES != 3))
+
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES != 3))
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES == 3))
+
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES != 3 & ALWAYS == 1))
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES == 3 & ALWAYS == 1))
+
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES != 3 & ALWAYS != 1))
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES == 3 & ALWAYS != 1))
+
+svymean(~HSSTYL > 2, HOMEdesign)
+
+svymean(~HSSTYL > 2, subset(HOMEdesign, SES != 3 & ALWAYS == 1 & HSRELGON != 1))
+
+svymean(~HSRELGON == 1, subset(HOMEdesign, SES != 3 & ALWAYS == 1 & HSSTYL > 2))
+svymean(~HSRELGON == 1, subset(HOMEdesign, SES != 3 & ALWAYS == 1 & HSSTYL < 3))
+
+svymean(~HSSTYL == 4, HOMEdesign)
+
+svymean(~HSSTYL == 4, subset(HOMEdesign, SES != 3 & ALWAYS == 1))
+svymean(~HSSTYL == 4, subset(HOMEdesign, SES == 3 & ALWAYS == 1))
+
+svymean(~HSSTYL == 4, subset(HOMEdesign, SES != 3 & ALWAYS != 1))
+svymean(~HSSTYL == 4, subset(HOMEdesign, SES == 3 & ALWAYS != 1))
+
+svymean(~HSSTYL == 4, subset(HOMEdesign, SES != 3))
+svymean(~HSSTYL == 4, subset(HOMEdesign, SES == 3))
+
+svymean(~HSRELGON == 1, subset(HOMEdesign, HSMOSTX != 8))
+svymean(~HSRELGON == 1, subset(HOMEdesign, HSMOSTX == 8))
+
+svymean(~HSSTYL > 2, subset(HOMEdesign, HSRELGON != 1))
+svymean(~HSSTYL > 2, subset(HOMEdesign, HSRELGON == 1))
+# t-test
+svyttest((HSSTYL > 2) ~ HSRELGON, 
+         HOMEdesign,
+         na.rm=TRUE)
+
+svymean(~HSSTYL > 3, subset(HOMEdesign, HSRELGON != 1))
+svymean(~HSSTYL > 3, subset(HOMEdesign, HSRELGON == 1))
+
+svymean(~HSALTX == 1, subset(HOMEdesign, HSRELGON != 1))
+svymean(~HSALTX == 1, subset(HOMEdesign, HSRELGON == 1))
+
+
+svymean(~SES == 1, subset(HOMEdesign, HSSTYL == 4))
+svymean(~SES == 2, subset(HOMEdesign, HSSTYL == 4))
+svymean(~SES == 3, subset(HOMEdesign, HSSTYL == 4))
+
+svymean(~HSALTX == 1, subset(HOMEdesign, HSSTYL == 4))
+
+svymean(~ALWAYS == 1, subset(HOMEdesign, HSSTYL == 4))
+svymean(~HSRELGON == 1, subset(HOMEdesign, HSSTYL == 4))
+
+svymean(~HSRELGON == 1, subset(HOMEdesign, HSSTYL > 2))
+svymean(~HSRELGON == 1, subset(HOMEdesign, HSSTYL < 3))
+
+svymean(~HSSTYL > 2, subset(HOMEdesign, FIRST == 1 & ALLGRADEX != 0))
+
+
+svymean(~elementary_secondary == 1, subset(HOMEdesign, HSSTYL == 4))
+
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, HSSTYL == 4))
+
+
+svymean(~HSALTX == 1, subset(HOMEdesign, SES != 3 & ALWAYS == 1 & HSSTYL > 2))
+
+svymean(~HSALTX == 1, subset(HOMEdesign, SES != 3 & ALWAYS == 1))
+svymean(~HSALTX == 1, subset(HOMEdesign, SES == 3 & ALWAYS == 1))
+svymean(~HSALTX == 1, subset(HOMEdesign, SES != 3 & ALWAYS != 1))
+svymean(~HSALTX == 1, subset(HOMEdesign, SES == 3 & ALWAYS != 1))
 
 # END Reasons for Homeschooling

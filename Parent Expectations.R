@@ -1441,3 +1441,626 @@ svymean(~SEFUTUREX > 4, subset(PFIdesign, RACEETH == 2 & SCHTYPE == 1))
 svymean(~SEFUTUREX > 4, subset(PFIdesign, RACEETH == 3 & SCHTYPE == 1))
 svymean(~SEFUTUREX > 4, subset(PFIdesign, RACEETH == 4 & SCHTYPE == 1))
 
+
+# Homeschool transfers v always, NON-DISABLED
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+# transfers, by SES
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES != 3))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES == 3))
+cv(svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES != 3)))
+cv(svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES == 3)))
+# public school
+svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES != 3))
+svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES == 3))
+cv(svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES != 3)))
+cv(svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES == 3)))
+# always homeschooled
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES != 3))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES == 3))
+cv(svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES != 3)))
+cv(svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES == 3)))
+
+# t-tests
+COMBINEDdesign <- update(COMBINEDdesign, NoDis_Always = 
+                           ifelse(SCHTYPE == 3 & disability != 1 & ALWAYS == 1, "home", 
+                              ifelse(SCHTYPE == 1 & IEP != 1, "public", NA)))
+COMBINEDdesign <- update(COMBINEDdesign, NoDis_Trans = 
+                           ifelse(SCHTYPE == 3 & disability != 1 & ALWAYS != 1, "home", 
+                                  ifelse(SCHTYPE == 1 & IEP != 1, "public", NA)))
+
+svyttest((SEFUTUREX > 4) ~ NoDis_Always,
+         subset(COMBINEDdesign, SES == 3), 
+         na.rm=TRUE)
+svyttest((SEFUTUREX > 4) ~ NoDis_Always,
+         subset(COMBINEDdesign, SES != 3), 
+         na.rm=TRUE)
+svyttest((SEFUTUREX > 4) ~ NoDis_Trans,
+         subset(COMBINEDdesign, SES == 3), 
+         na.rm=TRUE)
+svyttest((SEFUTUREX > 4) ~ NoDis_Trans,
+         subset(COMBINEDdesign, SES != 3), 
+         na.rm=TRUE)
+
+# nondisabled transfers v. nondisabled always, reasons for hsing
+svymean(~HSSAFETYX == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSSAFETYX == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+svymean(~HSDISSATX == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSDISSATX == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+svymean(~HSRELGON == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSRELGON == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+svymean(~HSMORAL == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSMORAL == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+svymean(~HSALTX == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSALTX == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+svymean(~HSFMLY == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSFMLY == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+svymean(~HSOTHERX == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1))
+svymean(~HSOTHERX == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1))
+
+# specific SES level for low/middle
+# homeschool
+svymean(~SES == 1, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES != 3))
+svymean(~SES == 2, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES != 3))
+svymean(~SES == 1, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES != 3))
+svymean(~SES == 2, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES != 3))
+# public school
+svymean(~SES == 1, subset(PFIdesign, IEP != 1 & SES != 3))
+svymean(~SES == 2, subset(PFIdesign, IEP != 1 & SES != 3))
+
+# effect of grade level, non-disabled always hsing and transfers, by SES
+# transfers, by SES
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES != 3 & elementary_secondary == 1))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES == 3 & elementary_secondary == 1))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES != 3 & elementary_secondary == 2))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS != 1 & SES == 3 & elementary_secondary == 2))
+# public school
+svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES != 3 & elementary_secondary == 1))
+svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES == 3 & elementary_secondary == 1))
+svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES != 3 & elementary_secondary == 2))
+svymean(~SEFUTUREX > 4, subset(PFIdesign, SCHTYPE == 1 & IEP != 1 & SES == 3 & elementary_secondary == 2))
+# always homeschooled
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES != 3 & elementary_secondary == 1))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES == 3 & elementary_secondary == 1))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES != 3 & elementary_secondary == 2))
+svymean(~SEFUTUREX > 4, subset(HOMEdesign, disability != 1 & ALWAYS == 1 & SES == 3 & elementary_secondary == 2))
+
+
+
+# PROBABLY DELETE THIS SECTION 
+
+# parents v. kids
+
+table(HOME$PARGRADEX, HOME$FUTUREX)
+
+HOME$FUTUREX - HOME$PARGRADEX
+sum(HOME$FUTUREX - HOME$PARGRADEX)/sum(HOME$countn)
+
+PUBLIC <- subset(PFI, SCHTYPE == 1)
+PUBLIC$FUTUREX - PUBLIC$PARGRADEX
+sum(PUBLIC$FUTUREX - PUBLIC$PARGRADEX)/sum(PUBLIC$countn)
+
+# low/middle SES homeschooling families
+LMHOME <- subset(HOME, SES != 3)
+LMHOME$FUTUREX - LMHOME$PARGRADEX
+sum(LMHOME$FUTUREX - LMHOME$PARGRADEX)/sum(LMHOME$countn)
+
+HHOME <- subset(HOME, SES == 3)
+HHOME$FUTUREX - HHOME$PARGRADEX
+sum(HHOME$FUTUREX - HHOME$PARGRADEX)/sum(HHOME$countn)
+
+HHOME <- subset(HOME, ALWAYS == 1 & SES !=3)
+HHOME$FUTUREX - HHOME$PARGRADEX
+sum(HHOME$FUTUREX - HHOME$PARGRADEX)/sum(HHOME$countn)
+
+svymean(~FUTUREX>=1, subset(HOMEdesign, PARGRADEX == 1))
+svymean(~FUTUREX>=2, subset(HOMEdesign, PARGRADEX == 2))
+svymean(~FUTUREX>=3, subset(HOMEdesign, PARGRADEX == 3))
+svymean(~FUTUREX>=4, subset(HOMEdesign, PARGRADEX == 4))
+svymean(~FUTUREX>=5, subset(HOMEdesign, PARGRADEX == 5))
+
+svymean(~FUTUREX>=1, subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 1))
+svymean(~FUTUREX>=2, subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 2))
+svymean(~FUTUREX>=3, subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 3))
+svymean(~FUTUREX>=4, subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 4))
+svymean(~FUTUREX>=5, subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 5))
+
+svymean(~FUTUREX>=1, subset(HOMEdesign, ALWAYS == 1 & PARGRADEX == 1))
+svymean(~FUTUREX>=2, subset(HOMEdesign, ALWAYS == 1 & PARGRADEX == 2))
+svymean(~FUTUREX>=3, subset(HOMEdesign, ALWAYS == 1 & PARGRADEX == 3))
+svymean(~FUTUREX>=4, subset(HOMEdesign, ALWAYS == 1 & PARGRADEX == 4))
+svymean(~FUTUREX>=5, subset(HOMEdesign, ALWAYS == 1 & PARGRADEX == 5))
+
+svymean(~FUTUREX>=1, subset(HOMEdesign, ALWAYS != 1 & PARGRADEX == 1))
+svymean(~FUTUREX>=2, subset(HOMEdesign, ALWAYS != 1 & PARGRADEX == 2))
+svymean(~FUTUREX>=3, subset(HOMEdesign, ALWAYS != 1 & PARGRADEX == 3))
+svymean(~FUTUREX>=4, subset(HOMEdesign, ALWAYS != 1 & PARGRADEX == 4))
+svymean(~FUTUREX>=5, subset(HOMEdesign, ALWAYS != 1 & PARGRADEX == 5))
+
+
+
+summary(glm((SEFUTUREX>4) ~ DISABILITY*SES*home_public, family=binomial, data=PFI))
+
+summary(glm((SEFUTUREX>4) ~ SES*home_public, family=binomial, data=PFI))
+summary(glm((SEFUTUREX>4) ~ DISABILITY*home_public, family=binomial, data=PFI))
+
+
+
+summary(glm((SEFUTUREX>4) ~ (SES==3)*disability, family=binomial, data=HOME))
+
+summary(glm((SEFUTUREX>4) ~ DISABILITY, family=binomial, subset(PFI, home_public == 1)))
+summary(glm((SEFUTUREX>4) ~ DISABILITY, family=binomial, subset(PFI, home_public != 1)))
+
+
+
+
+summary(svyglm((SEFUTUREX>4) ~ disability*ALWAYS, family=binomial, design=HOMEdesign))
+
+
+
+summary(svyglm((SEFUTUREX>4) ~ SES*elementary_secondary*(ALWAYS==1), family=binomial, design=HOMEdesign))
+
+summary(svyglm((SEFUTUREX>4) ~ home_public*DISABILITY*SES*elementary_secondary, family=binomial, design=PFIdesign))
+
+
+summary(svyglm((SEFUTUREX>4) ~ SES*elementary_secondary, family=binomial, design=PFIdesign))
+
+summary(svyglm((SEFUTUREX>4) ~ home_public*elementary_secondary, family=binomial, design=PFIdesign))
+
+
+
+
+
+# CREATE DATA SET for regression
+
+EXPECT <- subset(PFI, SCHTYPE == 1 | SCHTYPE == 3)
+which( colnames(EXPECT)=="HOMEKX" ) # checking colnumbers
+which( colnames(EXPECT)=="HOME12" ) # should be 59 and 70
+EXPECT$TOTAL <- rowSums(EXPECT[ , c(58:70)], na.rm=TRUE)
+EXPECT$ALWAYS <- ifelse((EXPECT$TOTAL == (EXPECT$ALLGRADEX + 1)), 1, 0)
+sum(HOME$ALWAYS) # testing
+sum(EXPECT$ALWAYS) # these should be identical
+EXPECT$BA <- ifelse(EXPECT$SEFUTUREX>4, 1, 0)
+EXPECT$HIGHSES <- ifelse(EXPECT$SES == 3, 1, 0)
+# turn relevant columns into integers
+EXPECT$BA <- as.integer(EXPECT$BA)
+EXPECT$ALWAYS <- as.integer(EXPECT$ALWAYS)
+EXPECT$DISABILITY <- as.integer(EXPECT$DISABILITY)
+EXPECT$HIGHSES <- as.integer(EXPECT$HIGHSES)
+EXPECT$home_public <- as.integer(EXPECT$home_public)
+EXPECT$SCHTYPE <- as.integer(EXPECT$SCHTYPE)
+
+# CREATE design object from new data set
+EXPECTdesign <- svrepdesign(
+  data = EXPECT, 
+  repweights = subset(EXPECT, select = FPWT1:FPWT80), 
+  weights= ~FPWT, type="JK1", mse=TRUE, combined.weights=TRUE, 
+  scale=79/80)
+summary(EXPECTdesign)
+
+is.integer(EXPECT$HIGHSES)
+is.integer(EXPECT$ALWAYS)
+is.integer(EXPECT$DISABILITY)
+is.integer(EXPECT$BA)
+is.integer(EXPECT$SCHTYPE)
+
+# just disability
+summary(svyglm((BA) ~ DISABILITY, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 1)))
+summary(svyglm((BA) ~ DISABILITY, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 3)))
+# just high SES
+summary(svyglm((BA) ~ HIGHSES, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 1)))
+summary(svyglm((BA) ~ HIGHSES, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 3)))
+# just home_public
+summary(svyglm((BA) ~ home_public, family=quasibinomial, EXPECTdesign))
+# each factor separately
+summary(svyglm((BA) ~ home_public+DISABILITY+HIGHSES, family=quasibinomial, EXPECTdesign))
+# interactions
+summary(svyglm((BA) ~ home_public*HIGHSES, family=quasibinomial, EXPECTdesign))
+summary(svyglm((BA) ~ home_public*DISABILITY, family=quasibinomial, EXPECTdesign))
+summary(svyglm((BA==1) ~ home_public*DISABILITY*HIGHSES, family=quasibinomial, EXPECTdesign))
+
+summary(svyglm((BA==1) ~ home_public*DISABILITY, family=quasibinomial, 
+                         subset(EXPECTdesign, HIGHSES != 1)))
+
+
+
+# homeschool only
+summary(svyglm((BA) ~ ALWAYS*DISABILITY*HIGHSES, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 3)))
+summary(svyglm((BA) ~ ALWAYS*DISABILITY, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 3)))
+summary(svyglm((BA) ~ DISABILITY*HIGHSES, family=quasibinomial, 
+               subset(EXPECTdesign, SCHTYPE == 3)))
+
+
+# independent factors
+GLM1 <- svyglm((BA) ~ (home_public==1)+(DISABILITY==1)+(HIGHSES==1), family=quasibinomial, EXPECTdesign)
+round(exp(coef(GLM1)), digits = 2)
+
+
+
+
+# basic comparisons
+
+# ses only
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES == 3),
+         na.rm=TRUE)
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3),
+         na.rm=TRUE)
+
+# disabilities only
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY == 1 & SCHTYPE == 3 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY == 1 & SCHTYPE == 1 & elementary_secondary == 2))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, DISABILITY == 1 & elementary_secondary == 2),
+         na.rm=TRUE)
+
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY != 1 & SCHTYPE == 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY != 1 & SCHTYPE == 1))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, DISABILITY != 1),
+         na.rm=TRUE)
+
+
+svymean(~disability == 1, subset(PFIdesign, elementary_secondary == 1))
+
+svymean(~SEFUTUREX>4, subset(HOMEdesign, elementary_secondary == 2 & disability == 1))
+svymean(~SEFUTUREX>4, subset(PFIdesign, elementary_secondary == 2 & DISABILITY == 1 & SCHTYPE == 1))
+
+svymean(~SEFUTUREX>4, subset(HOMEdesign, elementary_secondary == 2 & disability != 1))
+svymean(~SEFUTUREX>4, subset(PFIdesign, elementary_secondary == 2 & DISABILITY != 1 & SCHTYPE == 1))
+
+
+svymean(~SEFUTUREX>4, subset(HOMEdesign, SES == 3 & disability != 1 & ALWAYS == 1))
+svymean(~SEFUTUREX>4, subset(HOMEdesign, SES == 3 & disability != 1 & ALWAYS == 1 &
+                             elementary_secondary == 2))
+svymean(~SEFUTUREX>4, subset(PFIdesign, SES == 3 & DISABILITY != 1 & #public school
+                               elementary_secondary == 2))
+
+
+svymean(~SEFUTUREX>4, subset(HOMEdesign, SES == 3 & ALWAYS == 1))
+svymean(~SEFUTUREX>4, subset(PFIdesign, SES == 3))
+
+svymean(~(SES == 3 & ALWAYS == 1), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(SES != 3), subset(HOMEdesign, elementary_secondary==2))
+svymean(~(ALWAYS != 1), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(SES != 3 & ALWAYS == 1), subset(HOMEdesign, elementary_secondary==2))
+svymean(~(SES == 3 & ALWAYS != 1), subset(HOMEdesign, elementary_secondary==2))
+
+# low/middle SES transfers
+svymean(~(SES != 3 & ALWAYS != 1), subset(HOMEdesign, elementary_secondary==2))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                            SES != 3 & ALWAYS != 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, elementary_secondary==2 & 
+                                 SES != 3))
+
+# all low/middle SES, grades 7-12
+svymean(~(SES != 3), subset(HOMEdesign, elementary_secondary==2))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, elementary_secondary==2 & 
+                                 SES != 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, elementary_secondary==2 & SES != 3),
+         na.rm=TRUE)
+
+# low/middle transfers, disability or no
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3 & ALWAYS != 1 & disability == 1))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3 & ALWAYS != 1 & disability != 1))
+
+svymean(~(disability==1), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3 & ALWAYS != 1))
+
+
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3 & ALWAYS != 1 & disability == 1)))
+
+# low/middle ses 7-12 disability, homeschool and public school
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3 & disability == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==2 & 
+                                 SES != 3 & DISABILITY == 1))
+# high ses 7-12 disability, homeschool and public school
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES == 3 & disability == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==2 & 
+                                 SES == 3 & DISABILITY == 1))
+
+# low/middle ses K-6 disability, homeschool and public school
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==1 & 
+                                 SES != 3 & disability == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==1 & 
+                                 SES != 3 & DISABILITY == 1))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+          subset(PFIdesign, elementary_secondary==1 & SES != 3 & DISABILITY == 1),
+          na.rm=TRUE)
+# high ses K-6 disability, homeschool and public school
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==1 & 
+                                 SES == 3 & disability == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==1 & 
+                                 SES == 3 & DISABILITY == 1))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, elementary_secondary==1 & SES == 3 & DISABILITY == 1),
+         na.rm=TRUE)
+
+# something
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES == 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==2 & 
+                                 SES == 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, elementary_secondary==2 & SES == 3),
+         na.rm=TRUE)
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & 
+                                 SES != 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==2 & 
+                                 SES != 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, elementary_secondary==2 & SES != 3),
+         na.rm=TRUE)
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, elementary_secondary==2 & disability != 1 &
+                                 SES != 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary==2 & disability != 1 &
+                                 SES != 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, elementary_secondary==2 & DISABILITY != 1 & SES != 3),
+         na.rm=TRUE)
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                                 SES != 3 & elementary_secondary==1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 &
+                                 SES != 3 & elementary_secondary==1))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3 & elementary_secondary==1),
+         na.rm=TRUE)
+
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               SES != 3 & ALWAYS==1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 &
+                                 SES != 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3 & elementary_secondary==1),
+         na.rm=TRUE)
+
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               HSINTNET==1 & SES !=3))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               HSINTNET==1 & SES ==3))
+
+
+svymean(~(HSINTNET==1 & SES !=3), HOMEdesign)
+
+
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               HSINTNET==1 & SES != 3))
+
+
+part <- subset(HOME, SES !=3)
+table(part$HSINTNET, part$SEFUTUREX)
+
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 &
+                                 SES != 3))
+
+svymean(~(SES==2), subset(HOMEdesign, 
+                               SES != 3))
+svymean(~(SES==2), subset(PFIdesign, SCHTYPE == 1 &
+                                 SES != 3))
+svyttest((SES==2) ~ (home_public), 
+         subset(PFIdesign, SES != 3),
+         na.rm=TRUE)
+
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               SES != 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 &
+                                 SES != 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3),
+         na.rm=TRUE)
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               SES == 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SCHTYPE == 1 &
+                                 SES == 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES == 3),
+         na.rm=TRUE)
+
+
+
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               ALWAYS != 1))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               ALWAYS == 1))
+svyttest((SEFUTUREX>4) ~ (ALWAYS == 1), 
+         HOMEdesign,
+         na.rm=TRUE)
+
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               ALWAYS != 1 & SES == 3))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, 
+                               ALWAYS == 1 & SES == 3))
+svyttest((SEFUTUREX>4) ~ (ALWAYS == 1), 
+         subset(HOMEdesign, SES != 3),
+         na.rm=TRUE)
+
+
+svymean(~(SES != 3 & disability == 1), subset(HOMEdesign, elementary_secondary==2))
+svymean(~(SES != 3 & disability != 1), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(SES == 3 & disability == 1), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(SES != 3), subset(PFIdesign, elementary_secondary==2 & DISABILITY == 1))
+
+svymean(~(ALWAYS!=1), subset(HOMEdesign, elementary_secondary==2 & disability == 1 &
+                             SES != 3))
+svymean(~(ALWAYS!=1), subset(HOMEdesign, elementary_secondary==1 & disability == 1 &
+                               SES != 3))
+
+svymean(~(ALWAYS!=1), subset(HOMEdesign, elementary_secondary==2 & disability == 1))
+svymean(~(ALWAYS!=1), subset(HOMEdesign, elementary_secondary==1 & disability == 1))
+
+svymean(~(HSDISABLX==1), subset(HOMEdesign, elementary_secondary==1))
+svymean(~(HSDISABLX==1), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(HSDISABLX==1), subset(HOMEdesign, elementary_secondary==1 & SES != 3))
+svymean(~(HSDISABLX==1), subset(HOMEdesign, elementary_secondary==2 & SES != 3))
+
+
+
+
+
+round((svytable(~(TOTAL), subset(HOMEdesign, elementary_secondary==2 & disability == 1 &
+                               SES != 3))) / 
+  sum(svytable(~(TOTAL), subset(HOMEdesign, elementary_secondary==2 & disability == 1 &
+                                    SES != 3))), digits = 3)
+
+part <- subset(HOME, elementary_secondary==2 & SES!=3 & disability == 1)
+part$ALLGRADEX - part$TOTAL + 1
+
+round((svytable(~FIRSTyr, subset(HOMEdesign, elementary_secondary==2 & SES!=3 & disability == 1)) /
+  sum(svytable(~FIRSTyr, subset(HOMEdesign, elementary_secondary==2 & SES!=3 & disability == 1))))*100)
+
+
+svymean(~(disability == 1), subset(HOMEdesign, elementary_secondary==2 & SES != 3))
+
+
+# has disability, high SES and low/middle SES
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY == 1 & SCHTYPE == 3 & SES == 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY == 1 & SCHTYPE == 1 & SES == 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, DISABILITY == 1 & SES == 3),
+         na.rm=TRUE)
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY == 1 & SCHTYPE == 3 & SES != 3))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, DISABILITY == 1 & SCHTYPE == 1 & SES != 3))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, DISABILITY == 1 & SES != 3),
+         na.rm=TRUE)
+
+# background on students by age
+svymean(~(disability==1), subset(HOMEdesign, elementary_secondary==1))
+svymean(~(disability==1), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(SES!=3), subset(HOMEdesign, elementary_secondary==1))
+svymean(~(SES!=3), subset(HOMEdesign, elementary_secondary==2))
+
+svymean(~(disability==1), subset(HOMEdesign, ALLGRADEX < 3))
+svymean(~(disability==1), subset(HOMEdesign, ALLGRADEX > 8))
+
+svymean(~(SES==3), subset(HOMEdesign, ALLGRADEX < 3))
+svymean(~(SES==3), subset(HOMEdesign, ALLGRADEX > 8))
+
+svymean(~(ALWAYS == 1), subset(HOMEdesign, ALLGRADEX < 3))
+svymean(~(ALWAYS == 1), subset(HOMEdesign, ALLGRADEX > 8))
+
+# quick run of expectations
+# grades K-6, disability
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability == 1 & elementary_secondary == 1))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability == 1 & elementary_secondary == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 1))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability == 1 & elementary_secondary == 1)))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability == 1 & elementary_secondary == 1)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 1)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 1)))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES == 3 & DISABILITY == 1 & elementary_secondary == 1),
+         na.rm=TRUE)
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3 & DISABILITY == 1 & elementary_secondary == 1),
+         na.rm=TRUE)
+
+# grades K-6, no disability
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability != 1 & elementary_secondary == 1))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability != 1 & elementary_secondary == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 1))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 1))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability != 1 & elementary_secondary == 1)))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability != 1 & elementary_secondary == 1)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 1)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 1)))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES == 3 & DISABILITY != 1 & elementary_secondary == 1),
+         na.rm=TRUE)
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3 & DISABILITY != 1 & elementary_secondary == 1),
+         na.rm=TRUE)
+
+# grades 7-12, disability
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability == 1 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability == 1 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 2))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability == 1 & elementary_secondary == 2)))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability == 1 & elementary_secondary == 2)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 2)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY == 1 & elementary_secondary == 2)))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES == 3 & DISABILITY == 1 & elementary_secondary == 2),
+         na.rm=TRUE)
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3 & DISABILITY == 1 & elementary_secondary == 2),
+         na.rm=TRUE)
+
+# grades 7-12, no disability
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability != 1 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability != 1 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 2))
+svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 2))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES == 3 & 
+                                 disability != 1 & elementary_secondary == 2)))
+cv(svymean(~(SEFUTUREX>4), subset(HOMEdesign, SES != 3 & 
+                                 disability != 1 & elementary_secondary == 2)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES == 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 2)))
+cv(svymean(~(SEFUTUREX>4), subset(PFIdesign, SES != 3 & SCHTYPE == 1 &
+                                 DISABILITY != 1 & elementary_secondary == 2)))
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES == 3 & DISABILITY != 1 & elementary_secondary == 2),
+         na.rm=TRUE)
+svyttest((SEFUTUREX>4) ~ (home_public), 
+         subset(PFIdesign, SES != 3 & DISABILITY != 1 & elementary_secondary == 2),
+         na.rm=TRUE)
+
+
+
+
+# END SCRIPT
