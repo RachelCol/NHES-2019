@@ -1,11 +1,16 @@
 # DEMOGRAPHICS
-# This document generates the demographics used in 
-# "Part I: Overall Household Demographics"
+# The statistics generated here did not ultimately make it into the paper;
+# instead, I created an SES variable and made that the focus for the paper.
+
+# note: This script is designed to run after 0_data_subsets script.
 
 HOME <- subset(PFI, SCHTYPE == 3)
 PUBLIC <- subset(PFI, SCHTYPE == 1)
 PRIVATE <- subset(PFI, SCHTYPE == 2)
 VIRTUAL <- subset(PFI, SCHTYPE == 4)
+
+PFI$welfare
+PRIVATE$welfare
 
 # ...
 
@@ -145,8 +150,6 @@ svyttest((PARGRADEX == 5) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-
-
 # ...
 
 # Household Structure
@@ -182,6 +185,7 @@ svyttest((HHPARN19_BRD == 2) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
+# -----
 
 # Number of siblings
 
@@ -294,7 +298,8 @@ round(wpct(PUBLIC$welfare, weight=PUBLIC$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(PRIVATE$welfare, weight=PRIVATE$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(VIRTUAL$welfare, weight=VIRTUAL$FPWT, na.rm=TRUE), digits = 3)
 
-# Family poverty status (income and household size)
+# Family poverty status 
+# note: This variable is created in 0_data_subsets, using income and household size.
 round(wpct(HOME$poverty, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(PUBLIC$poverty, weight=PUBLIC$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(PRIVATE$poverty, weight=PRIVATE$FPWT, na.rm=TRUE), digits = 3)
@@ -332,7 +337,7 @@ svyttest((poverty == 2) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-svyttest((two_parent_work == 3) ~ home_virtual, 
+svyttest((PFIdesign == 3) ~ home_virtual, 
          PFIdesign,
          na.rm=TRUE)
 
@@ -341,7 +346,10 @@ svyttest((two_parent_work == 3) ~ home_virtual,
 # Household Employment
 
 # Two-parent families, employment, home v. public
-# (1) both work full time; (2) both work, some part-time; (3) one works; (4) both not employed
+# (1) both work full time; 
+# (2) both work, some part-time; 
+# (3) one works while the other does not; 
+# (4) both not employed
 
 round(wpct(HOME$two_parent_work, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(PUBLIC$two_parent_work, weight=PUBLIC$FPWT, na.rm=TRUE), digits = 3)
@@ -397,7 +405,9 @@ svyttest((two_parent_work == 4) ~ home_virtual,
          na.rm=TRUE)
 
 # Single-parent families, employment, home v. public
-# (1) full time work; (2) part-time work; (3) not employed
+# (1) full time work; 
+# (2) part-time work; 
+# (3) not employed
 
 round(wpct(HOME$one_parent_work, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(PUBLIC$one_parent_work, weight=PUBLIC$FPWT, na.rm=TRUE), digits = 3)
@@ -479,7 +489,9 @@ svyttest((sahp == 1) ~ home_virtual,
          na.rm=TRUE)
 
 # Households by women's involvement in the workforce
-# (1 = full-time, 2 = part-time, 3 = not employed)
+# 1 = full-time;
+# 2 = part-time;
+# 3 = not employed
 
 round(wpct(HOME$women_work, weight=HOME$FPWT, na.rm=TRUE), digits=3)
 round(wpct(PUBLIC$women_work, weight=PUBLIC$FPWT, na.rm=TRUE), digits=3)
@@ -523,7 +535,9 @@ svyttest((women_work == 3) ~ home_virtual,
          na.rm=TRUE)
 
 # Households by men's involvement in the workforce
-# (1 = full-time, 2 = part-time, 3 = not employed)
+# 1 = full-time;
+# 2 = part-time; 
+# 3 = not employed
 
 round(wpct(HOME$men_work, weight=HOME$FPWT, na.rm=TRUE), digits=3)
 round(wpct(PUBLIC$men_work, weight=PUBLIC$FPWT, na.rm=TRUE), digits=3)
