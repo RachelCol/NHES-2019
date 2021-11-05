@@ -2,6 +2,11 @@
 # this adds a lot by subsets
 # it is PART II, after "Homeschooling Methods"
 
+# This script is in the process of being cleaned up.
+
+# note: This script is designed to run after 0_data_subsets script.
+
+
 # NEW DIVISION, ONLY SES & ALWAYS v. TRANSFER
 
 # count tables by group

@@ -2,6 +2,11 @@
 # this uses demographics, but not subsets
 # it is PART I, followed by "methods by subsets"
 
+# This script is in the process of being cleaned up.
+
+# note: This script is designed to run after 0_data_subsets script.
+
+
 PFIdesign <- update(PFIdesign,  home_public = ifelse(SCHTYPE==3, "home", ifelse(SCHTYPE==1, "public", NA)))
 HOMEdesign <- update(HOMEdesign,  low_high = ifelse(SES == 1, "low", ifelse(SES == 3, "high", NA)))
 HOMEdesign <- update(HOMEdesign,  lm_high = ifelse(SES < 3, "lm", "high"))
