@@ -1,5 +1,7 @@
 # Student's race, school level, and SES
-# note: This did not make it into the paper
+# note: This racial breakdown did not make it into the paper
+
+# note: This script is designed to run after 0_data_subsets script.
 
 # Grades K-6, White students, public school v. homeschool
 part <- subset(HOME, white_nonwhite == 1 & elementary_secondary == 1)
