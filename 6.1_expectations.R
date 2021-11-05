@@ -1,8 +1,261 @@
 # Parent expectations
 
+# This script is in the process of being updated!
+
+# Need to go through and remove things -- update
+
 # FUTURE EXPECTATIONS OF EDUCATIONAL ATTAINMENT
 HOMEdesign <- update(PFIdesign,  home_public = ifelse(SCHTYPE == 3, "home", 
                                                       ifelse(SCHTYPE == 1, "public", NA)))
+
+
+# Parent Education
+# Homeschool v. Public School
+
+
+# ALL RESPONDENTS
+# Percent of households with a parent with a BA, homeschool v. public school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      PFIdesign,
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         PFIdesign, 
+         na.rm=TRUE)
+
+# Respondents with a child in elementary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, elementary_secondary == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, elementary_secondary == 1), 
+         na.rm=TRUE)
+
+# Respondents with a child in secondary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, elementary_secondary == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, elementary_secondary == 2), 
+         na.rm=TRUE)
+
+# ---
+
+# WHITE CHILDREN
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, white_nonwhite == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, white_nonwhite == 1),
+         na.rm=TRUE)
+
+# Respondents with a child in elementary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 1 &
+               white_nonwhite == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 1 &
+                  white_nonwhite == 1), 
+         na.rm=TRUE)
+
+# Respondents with a child in secondary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 2 &
+               white_nonwhite == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 2 &
+                  white_nonwhite == 1), 
+         na.rm=TRUE)
+
+# ---
+
+# NONWHITE CHILDREN
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             white_nonwhite == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                white_nonwhite == 2),
+         na.rm=TRUE)
+
+# Respondents with a child in elementary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 1 &
+               white_nonwhite == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 1 &
+                  white_nonwhite == 2), 
+         na.rm=TRUE)
+
+# Respondents with a child in secondary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 2 &
+               white_nonwhite == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 2 &
+                  white_nonwhite == 2), 
+         na.rm=TRUE)
+
+# ---
+
+# INTER-HOMESCHOOL COMPARISON
+
+# Percent of homeschooling households with a parent with a bachelor's degree, 
+# elementary v. secondary 
+
+svyby(~(PARGRADEX > 3), 
+      ~elementary_secondary, 
+      subset(PFIdesign, home_public == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ elementary_secondary, 
+         subset(PFIdesign, home_public == 1),
+         na.rm=TRUE)
+
+# ---
+
+# CHILDREN IN TWO-PARENT HOUSEHOLDS
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, two_parent_or_single == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, two_parent_or_single == 1),
+         na.rm=TRUE)
+
+# Respondents with a child in elementary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 1 &
+               two_parent_or_single == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 1 &
+                  two_parent_or_single == 1), 
+         na.rm=TRUE)
+
+# Respondents with a child in secondary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 2 &
+               two_parent_or_single == 1),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 2 &
+                  two_parent_or_single == 1), 
+         na.rm=TRUE)
+
+# ---
+
+# CHILDREN IN SINGLE PARENT HOUSEHOLDS
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             two_parent_or_single == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                two_parent_or_single == 2),
+         na.rm=TRUE)
+
+# Respondents with a child in elementary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 1 &
+               two_parent_or_single == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 1 &
+                  two_parent_or_single == 2), 
+         na.rm=TRUE)
+
+# Respondents with a child in secondary school
+
+svyby(~(PARGRADEX > 3), 
+      ~home_public, 
+      subset(PFIdesign, 
+             elementary_secondary == 2 &
+               two_parent_or_single == 2),
+      svymean, 
+      na.rm=TRUE)
+
+svyttest((PARGRADEX > 3) ~ home_public, 
+         subset(PFIdesign, 
+                elementary_secondary == 2 &
+                  two_parent_or_single == 2), 
+         na.rm=TRUE)
+
+
 
 
 # 1. Percent expecting their child to obtain a bachelor's degree,
