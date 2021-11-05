@@ -1,16 +1,16 @@
 # DEMOGRAPHICS
+# This script looks at race, educaiton, poverty, family structure, and more,
+# comparing homeschool, public school, private school, and virtual school
+
 # The statistics generated here did not ultimately make it into the paper;
 # instead, I created an SES variable and made that the focus for the paper.
 
 # note: This script is designed to run after 0_data_subsets script.
 
-HOME <- subset(PFI, SCHTYPE == 3)
 PUBLIC <- subset(PFI, SCHTYPE == 1)
 PRIVATE <- subset(PFI, SCHTYPE == 2)
 VIRTUAL <- subset(PFI, SCHTYPE == 4)
-
-PFI$welfare
-PRIVATE$welfare
+# note: "HOME" already exists, no need to create it
 
 # ...
 
