@@ -1,5 +1,7 @@
 # POVERTY v. EDUCATION
-# Showing that homeschoolers have lower incomes relative to their education
+
+# Question: Do homeschooling families have lower incomes relative to their education?
+# Answer: Yes
 
 # note: This script is designed to run after 0_data_subsets script.
 
@@ -72,5 +74,35 @@ svymean(~ba_no_ba == 1, subset(PFIdesign, SCHTYPE == 1 & poverty < 3))
 svyttest((ba_no_ba == 1) ~ home_public, 
          subset(PFIdesign, poverty < 3),
          na.rm=TRUE)
+
+# ----- 
+
+# IN OR NEAR POVERTY, by parents' education level
+# homeschool v. public school v. private school v. virtual school
+
+svymean(~(poverty < 3), subset(PFIdesign, PARGRADEX == 1)) # combined
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 3 & PARGRADEX == 1))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 1))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 2 & PARGRADEX == 1))
+
+svymean(~(poverty < 3), subset(PFIdesign, PARGRADEX == 2)) # combined
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 3 & PARGRADEX == 2))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 2))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 2 & PARGRADEX == 2))
+
+svymean(~(poverty < 3), subset(PFIdesign, PARGRADEX == 3)) # combined
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 3 & PARGRADEX == 3))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 3))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 2 & PARGRADEX == 3))
+
+svymean(~(poverty < 3), subset(PFIdesign, PARGRADEX == 4)) # combined
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 3 & PARGRADEX == 4))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 4))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 2 & PARGRADEX == 4))
+
+svymean(~(poverty < 3), subset(PFIdesign, PARGRADEX == 5)) # combined
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 3 & PARGRADEX == 5))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 1 & PARGRADEX == 5))
+svymean(~(poverty < 3), subset(PFIdesign, SCHTYPE == 2 & PARGRADEX == 5))
 
 # END SECTON ON EDUCATION V. POVERTY LEVEL
