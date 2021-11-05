@@ -1,6 +1,7 @@
-# Analyzing the weights
+# ANALYZING THE WEIGHTS
 
-# Note: run main data subsets file first!
+# note: This script is designed to run after 0_data_subsets script.
+
 
 HOME <- subset(PFI, SCHTYPE == 3)
 
@@ -103,6 +104,6 @@ WEIGHTS <- t(WEIGHTS)
 colnames(WEIGHTS) <- c("Count", "Weighted Total", "Max Weight", "Mean Weight", "Percent")
 print(WEIGHTS)
 
-# write.csv(WEIGHTS,"/Users/Rachel/R-Projects/NHES-2019/WEIGHTS.csv", row.names = TRUE)
+write.csv(WEIGHTS,"/Users/Rachel/R-Projects/NHES-2019/data/WEIGHTS.csv", row.names = TRUE)
 
 # End weight table section
