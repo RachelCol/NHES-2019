@@ -1,9 +1,13 @@
 # Reasons for Homeschooling
 # Overall, and by race (white v. nonwhite)
 
-# Create subsets to enable comparison 
+# This script is in the process of being cleaned up.
 
-HOME <- subset(PFI, SCHTYPE == 3)
+# note: This script is designed to run after 0_data_subsets script.
+
+
+
+# Create subsets to enable comparison 
 
 HS_W <- subset(HOME, SCHTYPE == 3 & white_nonwhite == 1)
 HS_M <- subset(HOME, SCHTYPE == 3 & white_nonwhite == 2)
