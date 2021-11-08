@@ -4,54 +4,6 @@
 
 # -----
 
-# NUMBER OF CHILDREN HOMESCHOOLED
-
-# Number of children homeschooled in each grade
-round(svytable(~ALLGRADEX, HOMEdesign))
-# Total number of children homeschooled
-sum(round(svytable(~ALLGRADEX, HOMEdesign)))
-
-# PERCENT OF CHILDREN IN THEIR FIRST YEAR OF HOMESCHOOLING
-
-# Number of children homeschooled in each grade
-round(svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1)))
-# Total number of children in their first year of homeschooling
-sum(round(svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1))))
-# Percent in their first year of homeschooling, by grade
-round(((svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1))) / 
-         svytable(~ALLGRADEX, HOMEdesign)*100), digits = 1)
-
-# note: Bar plots for the above are found in 2.2_retention_plots.
-
-# -----
-
-# FIRST YEAR: OVERALL 
-svymean(~FIRST, HOMEdesign)
-# overall, excluding kindergarten
-svymean(~FIRST, subset(HOMEdesign, ALLGRADEX > 0))
-# elementary school
-svymean(~FIRST, subset(HOMEdesign, elementary_secondary == 1))
-# elementary school, excluding kindergarten
-svymean(~FIRST, subset(HOMEdesign, elementary_secondary == 1 & ALLGRADEX > 0))
-# secondary school
-svymean(~FIRST, subset(HOMEdesign, elementary_secondary == 2))
-
-# ALWAYS: OVERALL
-svymean(~ALWAYS, HOMEdesign)
-# overall, excluding kindergarten
-svymean(~ALWAYS, subset(HOMEdesign, ALLGRADEX > 0))
-# elementary school
-svymean(~ALWAYS, subset(HOMEdesign, elementary_secondary == 1))
-# elementary school, excluding kindergarten
-svymean(~ALWAYS, subset(HOMEdesign, elementary_secondary == 1 & ALLGRADEX > 0))
-# secondary school
-svymean(~ALWAYS, subset(HOMEdesign, elementary_secondary == 2))
-
-# Percent always homeschooled, by grade
-round(((svytable(~ALLGRADEX, subset(HOMEdesign, ALWAYS == 1))) / 
-         svytable(~ALLGRADEX, HOMEdesign)*100), digits = 1)
-# -----
-
 # CALCULATING RETENTION RATE
 
 # CREATE a table for years homeschooled and grades, with weighted counts
@@ -127,6 +79,54 @@ round(sum((HOME$TOTAL < 4) * HOME$FPWT)/sum(HOME$FPWT), digits = 3)
 # TOTAL first AND second AND third AND fourth year homeschooling
 round(sum((HOME$TOTAL < 5) * HOME$FPWT)/sum(HOME$FPWT), digits = 3)
 
+# -----
+
+# NUMBER OF CHILDREN HOMESCHOOLED
+
+# Number of children homeschooled in each grade
+round(svytable(~ALLGRADEX, HOMEdesign))
+# Total number of children homeschooled
+sum(round(svytable(~ALLGRADEX, HOMEdesign)))
+
+# PERCENT OF CHILDREN IN THEIR FIRST YEAR OF HOMESCHOOLING
+
+# Number of children homeschooled in each grade
+round(svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1)))
+# Total number of children in their first year of homeschooling
+sum(round(svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1))))
+# Percent in their first year of homeschooling, by grade
+round(((svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1))) / 
+         svytable(~ALLGRADEX, HOMEdesign)*100), digits = 1)
+
+# note: Bar plots for the above are found in 2.2_retention_plots.
+
+# -----
+
+# FIRST YEAR: OVERALL 
+svymean(~FIRST, HOMEdesign)
+# overall, excluding kindergarten
+svymean(~FIRST, subset(HOMEdesign, ALLGRADEX > 0))
+# elementary school
+svymean(~FIRST, subset(HOMEdesign, elementary_secondary == 1))
+# elementary school, excluding kindergarten
+svymean(~FIRST, subset(HOMEdesign, elementary_secondary == 1 & ALLGRADEX > 0))
+# secondary school
+svymean(~FIRST, subset(HOMEdesign, elementary_secondary == 2))
+
+# ALWAYS: OVERALL
+svymean(~ALWAYS, HOMEdesign)
+# overall, excluding kindergarten
+svymean(~ALWAYS, subset(HOMEdesign, ALLGRADEX > 0))
+# elementary school
+svymean(~ALWAYS, subset(HOMEdesign, elementary_secondary == 1))
+# elementary school, excluding kindergarten
+svymean(~ALWAYS, subset(HOMEdesign, elementary_secondary == 1 & ALLGRADEX > 0))
+# secondary school
+svymean(~ALWAYS, subset(HOMEdesign, elementary_secondary == 2))
+
+# Percent always homeschooled, by grade
+round(((svytable(~ALLGRADEX, subset(HOMEdesign, ALWAYS == 1))) / 
+         svytable(~ALLGRADEX, HOMEdesign)*100), digits = 1)
 # -----
 
 # IS SECONDARY SCHOOL A DIFFERENT SET OF KIDS?
@@ -226,7 +226,5 @@ svymean(~TOTAL, subset(HOMEdesign, ALLGRADEX == 9))
 svymean(~TOTAL, subset(HOMEdesign, ALLGRADEX == 10))
 svymean(~TOTAL, subset(HOMEdesign, ALLGRADEX == 11))
 svymean(~TOTAL, subset(HOMEdesign, ALLGRADEX == 12))
- 
-# -----
 
 # END SCRIPT
