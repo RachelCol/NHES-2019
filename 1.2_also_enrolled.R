@@ -1,5 +1,7 @@
 # HOMESCHOOLED CHILDREN WHO ARE ALSO ENROLLED IN A SCHOOL
 
+# note: This code is designed to run after the 0_data_subsets document
+
 # GOAL: Find a way to identify any child who is also enrolled
 # in a school, for online or in-person classes.
 # -- public school
@@ -10,6 +12,7 @@
 # -----
 
 # 1. CREATE NEW 'SCHOOL' VARIABLE
+
 # At the beginning of the survey, parents are asked to indicate the type of
 # school their child attends in Q2. Some respondents who selected "student is
 # homeschooled" also selected public, private, or virtual school.
@@ -32,9 +35,8 @@ HOME$school_1 <- ifelse(HOME$EDCPUB == 1, 1,
 # even if they also selected private school; respondents who selected a private
 # school were coded as '2', regardless of whether they selected virtual school.
 
-# -----
-
 # 2. CREATE NEW 'ENROLLED' VARIABLE
+
 # At the end of the homeschool section, the survey asks whether the child is
 # 'also enrolled in a school' (HSENRL). There is overlap between these
 # respondents and those who selected a school at the beginning of the survey
@@ -49,9 +51,8 @@ HOME$enrolled <- ifelse(HOME$HSENRL == 1, 1,
 
 HOME$enrolled[is.na(HOME$enrolled)] <- 0 # turn NAs into 0s
 
-# -----
-
 # 3. CREATE NEW 'school_2' VARIABLE 
+
 # If respondents answer "yes" to HSENRL (child is also enrolled in a school),
 # they are directed to the next section: questions about their child's school. 
 # This question includes an opt-out ("child is only homeschooled"). The 
@@ -91,9 +92,8 @@ HOME$school_2 <- ifelse(HOME$Q31 == 1, 1,
                ifelse(HOME$Q32 == 1 & HOME$Q31 != 1, 3,
                ifelse(HOME$Q34 == 1 & HOME$Q32 != 1, 2, NA)))
 
-# -----
-
 # 4. CREATE NEW "school" VARIABLE WITH SCHOOL TYPE
+
 # Finally, we combine these two variables ('school_1' and 'school_2') to create
 # a third variable: 'school' This variable will let us know whether a child
 # is also enrolled in a public, private, or virtual school.
