@@ -1,14 +1,5 @@
 # Clean data, create data sets, load libraries
 
-# Binary columns created in data subset document:
-# - home_public -> homeschool (1) or public school (2)
-# - elementary_secondary -> grades 1-6 (1) or grades 7-12 (2)
-# - ba_no_ba -> BA (1) or no BA (2)
-# - white_nonwhite -> white (1) or non-white (2)
-# - two_parent_or_single -> two-parent household (1) or single parent (2)
-# - english_or_no -> English spoken in the home (1) or no (2)
-
-
 # PACKAGES
 
 # NOTE: need to check which of these packages I actually need.
@@ -31,8 +22,11 @@
 # install.packages("Rtsne")
 # install.packages("klaR")
 # remotes::install_github("carlganz/svrepmisc")
+# remotes::install_github("rstudio/webshot2")
+# install.packages("reactable")
+# install.packages("reactablefmtr")
 
-library(klaR)
+library("klaR")
 library("tables")
 library("haven")
 library("survey")
@@ -50,8 +44,15 @@ library("xlsx")
 library("tidyr")
 library("cluster")
 library("Rtsne")
+library("reactable")
+library("reactablefmtr")
+library("webshot2")
 
-load(file = "pfi_pu_pert.RData")
+
+# CREATE DATA FILES
+
+load(file = "data/pfi_pu_pert.RData")
+original <- pfi_pu_pert
 
 # PFI data: Replace all -1s with NAs, change grade level numbers
 pfi_pu_pert[pfi_pu_pert == -1] <- NA
@@ -79,43 +80,41 @@ table(PFI$SCHLEVEL)
 # note that this column (SCHLEVEL) does not include any NAs
 
 # Create a column with: 1 = Public; 2 = Home; 3 = Private; 4 = Virtual
-PFI$SCHTYPE <- ifelse(PFI$EDCHSFL == 1 & PFI$HOMESCHLX == 1 & (
-                          PFI$SCHLHRSWK != 4 | is.na(PFI$SCHLHRSWK)), 3, 
+# note: Students are coded as homeschooled when respondents select "student is
+# homeschooled" on Question 2 (EDCHSFL); confirm on Question 4 that the  
+# student is homeschooled (HOMESCHLX); AND indicate that the child does not
+# attend a school for more than 25 hours/wk (SCHLHRSWK). 
+# note: All private school options are combined (EDCCAT, EDCPRI, and EDCPUB).
+# note: Respondents who select homeschool and also select a school (public, 
+# private, or virtual) are coded as homeschooled. Respondents who select a
+# virtual school and also a public or private school (but not homeschooling) 
+# are coded as virtual school students. 
+PFI$SCHTYPE <- ifelse(PFI$EDCHSFL == 1 & PFI$HOMESCHLX == 1 & 
+                          (PFI$SCHLHRSWK != 4 | is.na(PFI$SCHLHRSWK)), 3, 
                       ifelse(PFI$EDCINTK12 == 1, 4, 
                              ifelse((PFI$EDCCAT == 1 | 
                                        PFI$EDCREL == 1 | 
                                        PFI$EDCPRI == 1), 2, 
                                     ifelse(PFI$EDCPUB == 1, 1, 5))))
-# Note: SCHTYPE == 5 needs to be eliminated. 5 is all "yes" responses to 
-    # "EDCINTCOL" or "EDCCOL" and that did not also answer "yes" to other 
-    # school types. (EDCINTCOL and EDCCOL are online or in-person college.)
-# Remove all rows where SCHTYPE == 5.
+# Next, remove all rows where SCHTYPE == 5:
+# note: SCHTYPE == 5 includes all respondents who did not select homeschool, 
+# virtual school, private school, OR public school, instead selecting ONLY 
+# "EDCINTCOL" or "EDCCOL": online or in-person college. 
 PFI <- PFI[ which(PFI$SCHTYPE < 5), ]
 
 # check work using table (should be: 13882, 1736, 496, 250)
 table(PFI$SCHTYPE)
-
-# ON DETERMINING which students are homeschooled (lines 48 to 54):
-# PFI$EDCHSFL == 1: 
-#      1 = 13874, 2 = 1732, 3 = 532, 4 = 232
-# PFI$EDCHSFL == 1 & PFI$HOMESCHLX == 1: 
-#      1 = 13874, 2 = 1734, 3 = 519, 4 = 240
-# PFI$EDCHSFL == 1 & PFI$HOMESCHLX == 1 & (PFI$SCHLHRSWK != 4 | is.na(PFI$SCHLHRSWK):
-#      1 = 13882, 2 = 1736, 3 = 496, 4 = 250
-
-# Check grade level counts (should be grades 0 through 12)
-table(PFI$ALLGRADEX)
-
-# Add a "counts" column
-PFI$countn <- c(1)
 
 # Remove children under age 5 or over age 18
 table(PFI$AGE2018)
 PFI <- PFI[!(PFI$AGE2018 == 3 | PFI$AGE2018 == 4 | PFI$AGE2018 == 19 | PFI$AGE2018 == 20),]
 table(PFI$AGE2018)
 
-# Check grade level counts (should be grades 1 through 12)
-table(PFI$ALLGRADEX)
+# check work using table (should be: 13810, 1719, 490, 237)
+table(PFI$SCHTYPE)
+
+# Add a "counts" column
+PFI$countn <- c(1)
 
 # Create column with: homeschool (1) or public school (2)
 PFI$home_public <- ifelse(PFI$SCHTYPE == 3, 1, 
@@ -152,12 +151,8 @@ PFI$full_part1 <- ifelse((PFI$P1HRSWK >= 40), 1,
 PFI$full_part2 <- ifelse((PFI$P2HRSWK >= 40), 1, 
                    ifelse((PFI$P2HRSWK < 40), 2, 3))
 # Lastly, turn NAs (i.e. not in the workforce) into 3s.
-PFI[c(839, 840)][is.na(PFI[c(839, 840)])] <- 3
-# NOTE: DO NOT add any new columns before this entry! That would break this!!
-# Columns full_part1 and full_part2 should be columns 839 and 840.
-
-which(colnames(PFI)=="full_part1")
-which(colnames(PFI)=="full_part2")
+PFI$full_part1[is.na(PFI$full_part1)] <- 3
+PFI$full_part1[is.na(PFI$full_part1)] <- 3
 
 # Create a column for two-parent households' employment status
 # (1) both work full time; (2) both work, some part-time; (3) one works; (4) both not employed
@@ -292,12 +287,15 @@ PFI$SES <- ifelse(PFI$SESraw < 5, 1,
                   ifelse(PFI$SESraw == 5 | PFI$SESraw == 6, 2,
                          ifelse(PFI$SESraw > 6, 3, NA)))
 
-PFI$grade_range <- ifelse(PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2 | PFI$ALLGRADEX == 3, 1, 
-                           ifelse(PFI$ALLGRADEX == 4 | PFI$ALLGRADEX == 5 | PFI$ALLGRADEX == 6, 2, 
-                                  ifelse(PFI$ALLGRADEX == 7 | PFI$ALLGRADEX == 8 | PFI$ALLGRADEX == 9, 3,
-                                         ifelse(PFI$ALLGRADEX == 10 | PFI$ALLGRADEX == 11 | PFI$ALLGRADEX == 12, 4,
+# this variable allows for comparison of grades K-2, 3-5, 6-8, and 9-12
+PFI$grade_range <- ifelse(PFI$ALLGRADEX == 0 | PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2, 1, 
+                           ifelse(PFI$ALLGRADEX == 3 | PFI$ALLGRADEX == 4 | PFI$ALLGRADEX == 5, 2, 
+                                  ifelse(PFI$ALLGRADEX == 6 | PFI$ALLGRADEX == 7 | PFI$ALLGRADEX == 8, 3,
+                                         ifelse(PFI$ALLGRADEX == 9 | PFI$ALLGRADEX == 10 | PFI$ALLGRADEX == 11 | PFI$ALLGRADEX == 12, 4,
                                                 NA))))
 
+# This variable allows for two-year comparisons: 1-2, 3-4, 5-6, 7-8, 9-10, 11-12
+# used for number of children homeschooled by grade level, in 2.1_retention
 PFI$grade_range2 <- ifelse(PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2, 1, 
                           ifelse(PFI$ALLGRADEX == 3 | PFI$ALLGRADEX == 4, 2,
                               ifelse(PFI$ALLGRADEX == 5 | PFI$ALLGRADEX == 6, 3, 
@@ -305,6 +303,14 @@ PFI$grade_range2 <- ifelse(PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2, 1,
                                         ifelse(PFI$ALLGRADEX == 9 | PFI$ALLGRADEX == 10, 5,
                                             ifelse(PFI$ALLGRADEX == 11 | PFI$ALLGRADEX == 12, 6,
                                                NA))))))
+
+# This variable allows us to compare: 1-3, 4-6, 7-9, 10-12 
+# used for percent in their 1st yr of hsing, in 2.1_retention
+PFI$grade_range3 <- ifelse(PFI$ALLGRADEX == 1 | PFI$ALLGRADEX == 2 | PFI$ALLGRADEX == 3, 1, 
+                          ifelse(PFI$ALLGRADEX == 4 | PFI$ALLGRADEX == 5 | PFI$ALLGRADEX == 6, 2, 
+                                 ifelse(PFI$ALLGRADEX == 7 | PFI$ALLGRADEX == 8 | PFI$ALLGRADEX == 9, 3,
+                                        ifelse(PFI$ALLGRADEX == 10 | PFI$ALLGRADEX == 11 | PFI$ALLGRADEX == 12, 4,
+                                               NA))))
 
 PFI$condition <- ifelse((PFI$HDINTDIS == 1 | PFI$HDSPEECHX == 1 | PFI$HDDISTRBX == 1 | 
                         PFI$HDDEAFIMX == 1 | PFI$HDDEAFIMX == 1 | PFI$HDORTHOX == 1 | 
@@ -323,10 +329,11 @@ PFI$FUTUREX <- ifelse(PFI$SEFUTUREX == 1, 1,
 
 PFI$home_public <- ifelse(PFI$SCHTYPE == 3, 1, 
                           ifelse(PFI$SCHTYPE == 1, 2, NA)) 
-PFI$DISABILITY <- ifelse(PFI$HDIEPX == 1 & PFI$SCHTYPE == 1, 1,
-                         ifelse((PFI$HSDISABLX == 1 | PFI$HSILLX == 1 | PFI$HSSPCLNDX == 1) & PFI$SCHTYPE == 3, 1, 0))
-PFI$DISABILITY[is.na(PFI$DISABILITY)] <- 0
 
+PFI$DISABILITY <- ifelse(PFI$HDIEPX == 1 & PFI$SCHTYPE == 1, 1,
+                         ifelse((PFI$HSDISABLX == 1 | PFI$HSILLX == 1 | PFI$HSSPCLNDX == 1) & 
+                                  PFI$SCHTYPE == 3, 1, 0))
+PFI$DISABILITY[is.na(PFI$DISABILITY)] <- 0
 table(PFI$DISABILITY, PFI$SCHTYPE)
 
 # May want to add a column comparing virtual v. non-virtual
@@ -341,6 +348,7 @@ summary(PFIdesign)
 
 # END creation of PFI data set and PFIdesign object
 
+# -----
 
 # START HOME DATA SET CREATION
 
@@ -520,64 +528,8 @@ HOME$numberR <- rowSums(HOME[, 71:79])
 # change the 0s back to 2s so as not to break any code
 HOME[, 71:79][HOME[, 71:79] == 0] <- 2 
 
-# GOAL: Find a way to identify any child who is also enrolled
-# in a school, for online or in-person classes.
-# -- public school
-# -- private school
-# -- virtual school (actually enrolled, some or all)
-
-# note: I am leaving college out of this entirely
-
-# FIRST, create column with 1-4, from "type of school" Q at beginning
-HOME$school <- ifelse(HOME$EDCPUB == 1, 1,
-                      ifelse(HOME$EDCCAT == 1, 2, 
-                             ifelse(HOME$EDCREL == 1, 2,
-                                    ifelse(HOME$EDCPRI == 1, 2, 
-                                           ifelse(HOME$EDCINTK12 == 1, 3, 
-                                                                NA)))))
-
-# SECOND, create column with 1-3, from "also enrolled in school" section
-# 1 = public school
-# 2 = private school
-# 3 = virtual school
-
-HOME$Q31 <- ifelse(HOME$DISTASSI == 1 | HOME$DISTASSI == 2, 1, 2)
-# 19 answered Q31 (public)
-HOME$Q32 <- ifelse(HOME$SCHRTSCHL == 1 | HOME$SCHRTSCHL == 2, 1, 2)
-# 31 answered Q32 (virtual) - must subtract Q31 from this
-HOME$Q34 <- ifelse(HOME$SNEIGHBRX == 1 | HOME$SNEIGHBRX == 2, 1, 2)
-# 44 answered Q34 (private) - must subtract Q31 & Q32 from this
-
-# turn all NAs into 0s (otherwise they gum this up)
-which( colnames(HOME)=="Q31" )
-which( colnames(HOME)=="Q32" )
-which( colnames(HOME)=="Q34" )
-HOME[c(879, 880, 881)][is.na(HOME[c(879, 880, 881)])] <- 0
-
-# create column with 1-3 for answering Qs about public, private, or virtual
-# schools in the "child is also enrolled in a school" section
-HOME$also <- ifelse(HOME$Q31 == 1, 1,
-                    ifelse(HOME$Q32 == 1 & HOME$Q31 != 1, 3,
-                           ifelse(HOME$Q34 == 1 & HOME$Q32 != 1, 2, NA)))
-
-# THIRD, combine both objects (school and also)
-
-# start by turning NAs to 0, or they will mess it up
-which( colnames(HOME)=="school" )
-which( colnames(HOME)=="also" )
-HOME[c(878, 882)][is.na(HOME[c(878, 882)])] <- 0
-
-HOME$enrolled <- ifelse(HOME$school == 1, 1,
-                        ifelse(HOME$also == 1, 1,
-                               ifelse(HOME$school == 2, 2,
-                                      ifelse(HOME$also == 2, 2,
-                                             ifelse(HOME$school == 3, 3,
-                                                    ifelse(HOME$also == 3, 3,
-                                                                  NA))))))
-
 HOME$length <- ifelse(HOME$ALWAYS == 1, 1,
                       ifelse(HOME$ALWAYS == 0 & HOME$FIRST == 0, 2, 3))
-# END creation of enrolled object
 
 # CREATE new data frame to calculate total number of PHYSICAL sources
 curriculum <- as.data.frame(c(1:490))
@@ -657,7 +609,7 @@ summary(HOMEdesign)
 
 # MERGE DATA SETS for certain functions
 
-COMBINED <- merge(PFI, HOME, all = TRUE, sort = TRUE)
+# COMBINED <- merge(PFI, HOME, all = TRUE, sort = TRUE)
 
 COMBINEDdesign <- svrepdesign(
   data = COMBINED, 
