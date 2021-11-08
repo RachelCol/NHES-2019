@@ -2,9 +2,6 @@
 
 # note: This script is designed to run after 0_data_subsets script.
 
-
-HOME <- subset(PFI, SCHTYPE == 3)
-
 mean(HOME$FPWT)
 mean(HOME$FPWT)
 max(HOME$FPWT)
@@ -13,9 +10,10 @@ mean(PFI$FPWT)
 mean(PFI$FPWT)
 max(PFI$FPWT)
 
+# ---
 
-# This section checks what the weights look like for each grade
-# It creates a table with information about weights by grade
+# This section checks what the weights look like for each grade, and
+# creates a table with information about weights by grade.
 
 WEIGHTS <- c(1:5)
 WEIGHTS <- as.data.frame(WEIGHTS)
@@ -104,6 +102,6 @@ WEIGHTS <- t(WEIGHTS)
 colnames(WEIGHTS) <- c("Count", "Weighted Total", "Max Weight", "Mean Weight", "Percent")
 print(WEIGHTS)
 
-write.csv(WEIGHTS,"/Users/Rachel/R-Projects/NHES-2019/data/WEIGHTS.csv", row.names = TRUE)
+write.csv(WEIGHTS,"/data/WEIGHTS.csv", row.names = TRUE)
 
-# End weight table section
+# End weights script
