@@ -18,7 +18,7 @@ round(svytable(~elementary_secondary, HOMEdesign))
 (round(wpct(HOME$elementary_secondary, weight=HOME$FPWT, na.rm=TRUE), digits = 3)*100)
 # create a chart 
 two_ranges <- (round(svytable(~elementary_secondary, HOMEdesign))/1000)
-pdf(file="2_Retention/num_hsed_1.pdf")
+pdf(file="charts/num_hsed_1.pdf")
 barplot(two_ranges, main="Number of children homeschooled, by grade range", 
         ylab = "number in thousands",
         names.arg = c("K-6th", "7th-12th"))
@@ -29,7 +29,7 @@ round(svytable(~grade_range, HOMEdesign))
 (round(wpct(HOME$grade_range, weight=HOME$FPWT, na.rm=TRUE), digits = 3)*100)
 # create a chart 
 four_ranges <- (round(svytable(~grade_range, HOMEdesign))/1000)
-pdf(file="2_Retention/num_hsed_2.pdf")
+pdf(file="charts/num_hsed_2.pdf")
 barplot(four_ranges, main="Number of children homeschooled, by grade range", 
         ylab = "number in thousands",
         names.arg = c("K-2nd", "3rd-5th", "6th-8th", 
@@ -41,7 +41,7 @@ round(svytable(~grade_range2, HOMEdesign))
 (round(wpct(HOME$grade_range2, weight=HOME$FPWT, na.rm=TRUE), digits = 3)*100)
 # create a chart
 six_ranges <- (round(svytable(~grade_range2, subset(HOMEdesign, ALLGRADEX > 0)))/1000)
-pdf(file="2_Retention/num_hsed_3.pdf")
+pdf(file="charts/num_hsed_3.pdf")
 barplot(six_ranges, main="Number of children homeschooled, by grade range", 
         ylab = "number in thousands",
         names.arg = c("1st-2nd", "3rd-4th", "5th-6th", 
@@ -66,7 +66,7 @@ round(((svytable(~ALLGRADEX, subset(HOMEdesign, FIRST == 1))) /
 two_rangesFY <- (round(svytable(~elementary_secondary, subset(HOMEdesign, FIRST == 1)) /
                          svytable(~elementary_secondary, HOMEdesign), digits = 3)*100)
 # create a chart 
-pdf(file="2_Retention/first_year_percent_1.pdf")
+pdf(file="charts/first_year_percent_1.pdf")
 barplot(two_rangesFY, main="Percent in their first year of homeschooling", 
         ylab = "percent",
         names.arg = c("K-6th", "7th-12th"))
@@ -76,7 +76,7 @@ dev.off()
 four_rangesFY <- (round(svytable(~grade_range, subset(HOMEdesign, FIRST == 1)) /
                           svytable(~grade_range, HOMEdesign), digits = 3)*100)
 # create a chart 
-pdf(file="2_Retention/first_year_percent_2.pdf")
+pdf(file="charts/first_year_percent_2.pdf")
 barplot(four_rangesFY, main="Percent in their first year of homeschooling", 
         ylab = "percent",
         names.arg = c("K-2nd", "3rd-5th", "6th-8th", 
@@ -87,7 +87,7 @@ dev.off()
 four_rangesFY <- (round(svytable(~grade_range3, subset(HOMEdesign, FIRST == 1)) /
                           svytable(~grade_range3, HOMEdesign), digits = 3)*100)
 # create a chart 
-pdf(file="2_Retention/first_year_percent_3.pdf")
+pdf(file="charts/first_year_percent_3.pdf")
 barplot(four_rangesFY, main="Percent in their first year of homeschooling", 
         ylab = "percent",
         names.arg = c("1st-3rd", "4th-6th", "7th-9th", 

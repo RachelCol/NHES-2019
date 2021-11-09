@@ -341,7 +341,7 @@ svyttest((poverty == 2) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-svyttest((PFIdesign == 3) ~ home_virtual, 
+svyttest((poverty == 3) ~ home_virtual, 
          PFIdesign,
          na.rm=TRUE)
 

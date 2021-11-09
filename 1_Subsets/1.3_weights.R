@@ -102,6 +102,6 @@ WEIGHTS <- t(WEIGHTS)
 colnames(WEIGHTS) <- c("Count", "Weighted Total", "Max Weight", "Mean Weight", "Percent")
 print(WEIGHTS)
 
-write.csv(WEIGHTS,"/data/WEIGHTS.csv", row.names = TRUE)
+write.csv(WEIGHTS,"data/WEIGHTS.csv", row.names = TRUE)
 
 # End weights script
