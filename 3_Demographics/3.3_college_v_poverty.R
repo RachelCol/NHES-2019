@@ -1,9 +1,9 @@
 # POVERTY v. EDUCATION
 
-# Question: Do homeschooling families have lower incomes relative to their education?
-# Answer: Yes
-
 # note: This script is designed to run after 0_data_subsets script.
+
+# Question: Do homeschooling families have lower incomes relative to the
+# education levels of the parents? Answer: Yes
 
 # Create tables with poverty status and parent education levels, number in each
 HOMEtable <- svytable(~poverty+PARGRADEX, HOMEdesign)

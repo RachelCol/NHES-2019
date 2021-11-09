@@ -1,18 +1,16 @@
 # DEMOGRAPHICS
-# This script looks at race, education, poverty, family structure, and more,
-# comparing homeschool, public school, private school, and virtual school
-
-# The statistics generated here did not ultimately make it into my paper;
-# instead, I created an SES variable and made that the focus for the paper.
 
 # note: This script is designed to run after 0_data_subsets script.
+
+# This script looks at race, education, poverty, family structure, and more,
+# comparing homeschool, public school, private school, and virtual school
 
 PUBLIC <- subset(PFI, SCHTYPE == 1)
 PRIVATE <- subset(PFI, SCHTYPE == 2)
 VIRTUAL <- subset(PFI, SCHTYPE == 4)
 # note: "HOME" already exists, no need to create it
 
-# ...
+# -----
 
 # Child's Race
 
@@ -81,7 +79,7 @@ svyttest((RACEETH == 5) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-# ... 
+# -----
 
 # Parents' highest level of education
 
@@ -150,7 +148,7 @@ svyttest((PARGRADEX == 5) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-# ...
+# -----
 
 # Household Structure
 
@@ -259,7 +257,7 @@ svyttest((NUMSIBSX > 3) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-# ...
+# -----
 
 # Family Income & Poverty Level
 
@@ -341,7 +339,7 @@ svyttest((PFIdesign == 3) ~ home_virtual,
          PFIdesign,
          na.rm=TRUE)
 
-# ...
+# -----
 
 # Household Employment
 
