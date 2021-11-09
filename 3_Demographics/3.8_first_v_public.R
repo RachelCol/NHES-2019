@@ -59,6 +59,18 @@ svymean(~(ba_no_ba == 1), subset(HOMEdesign, FIRST == 1 & ALWAYS != 1 & RACEETH 
 svymean(~(ba_no_ba == 1), subset(HOMEdesign, FIRST == 1 & ALWAYS != 1 & RACEETH == 3 & 
                                    elementary_secondary == 2))
 
+# First year homeschool grades 7-12, v. public school grades 7-12
+svymean(~(ba_no_ba == 1), subset(HOMEdesign, elementary_secondary == 2 & FIRST == 1))
+svymean(~(ba_no_ba == 1), subset(PFIdesign, SCHTYPE == 1 & elementary_secondary == 2))
+# create comparison variable, run t-test; need to use COMBINEDdesign because
+# the variable "FIRST" does not exist in the PFI data set.
+COMBINEDdesign <- update(COMBINEDdesign,  homeFirst_public = 
+                           ifelse(SCHTYPE == 3 & FIRST == 1, "homeFirst", 
+                                  ifelse(SCHTYPE == 1, "public", NA)))
+svyttest((ba_no_ba == 1) ~ homeFirst_public, 
+         subset(COMBINEDdesign, elementary_secondary == 2),
+         na.rm=TRUE)
+
 # -----
 
 # POVERTY LEVEL

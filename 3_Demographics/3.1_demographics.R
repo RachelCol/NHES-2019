@@ -2,8 +2,14 @@
 
 # note: This script is designed to run after 0_data_subsets script.
 
-# This script looks at race, education, poverty, family structure, and more,
-# comparing homeschool, public school, private school, and virtual school
+# This script compares homeschool with public, private, and virtual school.
+
+# TABLE OF CONTENTS
+# -- 1. Child's Race/Ethnicity
+# -- 2. Parents' highest level of education
+# -- 3. Household structure
+# -- 4. Family Income & Poverty Level
+# -- 5. Household employment
 
 PUBLIC <- subset(PFI, SCHTYPE == 1)
 PRIVATE <- subset(PFI, SCHTYPE == 2)
@@ -12,7 +18,7 @@ VIRTUAL <- subset(PFI, SCHTYPE == 4)
 
 # -----
 
-# Child's Race
+# Child's Race/Ethnicity
 
 round(wpct(HOME$RACEETH, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
 round(wpct(PUBLIC$RACEETH, weight=PUBLIC$FPWT, na.rm=TRUE), digits = 3)
