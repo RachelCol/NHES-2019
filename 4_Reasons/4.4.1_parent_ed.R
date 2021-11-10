@@ -1,5 +1,5 @@
-# Reasons for Homeschooling
-# Overall, and by parent education level (BA or no BA)
+# REASONS FOR HOMESCHOOLING
+# by parent education level (BA or no BA)
 
 # note: This script is designed to run after 0_data_subsets script.
 
@@ -8,6 +8,7 @@
 HS_BA <- subset(HOME, ba_no_ba == 1)
 HS_NBA <- subset(HOME, ba_no_ba == 2)
 
+# -----
 
 # Reasons for homeschooling
 
@@ -127,6 +128,7 @@ svyttest((HSBULLY == 1) ~ ba_no_ba,
          HOMEdesign,
          na.rm=TRUE)
 
+# -----
 
 # Most important reason: HSMOSTX
 round(wpct(HS_BA$HSMOSTX, weight=HS_BA$FPWT, na.rm=TRUE), digits = 3)

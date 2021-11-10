@@ -1,17 +1,14 @@
 # Reasons for Homeschooling
-# Overall, and by race (white v. nonwhite)
-
-# This script is in the process of being cleaned up.
+# by race (white v. nonwhite)
 
 # note: This script is designed to run after 0_data_subsets script.
 
-
-
 # Create subsets to enable comparison 
 
-HS_W <- subset(HOME, SCHTYPE == 3 & white_nonwhite == 1)
-HS_M <- subset(HOME, SCHTYPE == 3 & white_nonwhite == 2)
+HS_W <- subset(HOME, white_nonwhite == 1)
+HS_M <- subset(HOME, white_nonwhite == 2)
 
+# -----
 
 # Reasons for homeschooling
 
@@ -22,7 +19,7 @@ HS_M <- subset(HOME, SCHTYPE == 3 & white_nonwhite == 2)
 # All homeschooled students
 wpct(HOME$HSSAFETYX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSSAFETYX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSSAFETYX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -37,7 +34,7 @@ svyttest((HSSAFETYX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSDISSATX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSDISSATX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSDISSATX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -52,7 +49,7 @@ svyttest((HSDISSATX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSRELGON, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSRELGON, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSRELGON, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -67,7 +64,7 @@ svyttest((HSRELGON == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSMORAL, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 
 wpct(HS_W$HSMORAL, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSMORAL, weight=HS_M$FPWT, na.rm=TRUE)
@@ -83,7 +80,7 @@ svyttest((HSMORAL == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSDISABLX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSDISABLX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSDISABLX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -98,7 +95,7 @@ svyttest((HSDISABLX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSILLX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSILLX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSILLX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -113,7 +110,7 @@ svyttest((HSILLX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSSPCLNDX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSSPCLNDX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSSPCLNDX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -128,7 +125,7 @@ svyttest((HSSPCLNDX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSALTX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSALTX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSALTX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -142,7 +139,7 @@ svyttest((HSALTX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSFMLY, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSFMLY, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSFMLY, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -156,7 +153,7 @@ svyttest((HSFMLY == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSOTHERX, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSOTHERX, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSOTHERX, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -170,7 +167,7 @@ svyttest((HSOTHERX == 1) ~ white_nonwhite,
 # All homeschooled students
 wpct(HOME$HSBULLY, weight=HOME$FPWT, na.rm=TRUE)
 
-# Elementary v. secondary homeschooled students
+# White v. nonwhite homeschooled students
 wpct(HS_W$HSBULLY, weight=HS_W$FPWT, na.rm=TRUE)
 wpct(HS_M$HSBULLY, weight=HS_M$FPWT, na.rm=TRUE)
 
@@ -178,15 +175,16 @@ svyttest((HSBULLY == 1) ~ white_nonwhite,
          subset(PFIdesign, SCHTYPE == 3),
          na.rm=TRUE)
 
+# -----
 
 # Most important reason: HSMOSTX
 
 # All homeschooled students
-wpct(HOME$HSMOSTX, weight=HOME$FPWT, na.rm=TRUE)
+round(wpct(HOME$HSMOSTX, weight=HOME$FPWT, na.rm=TRUE), digits = 3)
 
-# Elementary v. secondary homeschooled students
-wpct(HS_W$HSMOSTX, weight=HS_W$FPWT, na.rm=TRUE)
-wpct(HS_M$HSMOSTX, weight=HS_M$FPWT, na.rm=TRUE)
+# White v. nonwhite homeschooled students
+round(wpct(HS_W$HSMOSTX, weight=HS_W$FPWT, na.rm=TRUE), digits = 3)
+round(wpct(HS_M$HSMOSTX, weight=HS_M$FPWT, na.rm=TRUE), digits = 3)
 
 svyttest((HSMOSTX == 1) ~ white_nonwhite, 
          subset(PFIdesign, SCHTYPE == 3),

@@ -417,7 +417,7 @@ data$grades <- factor(data$grades,levels = c("Grades K-6", "Grades 6-8", "Grades
 
 # Stacked + percent BARPLOT
 
-pdf(file="4_Reasons/religious_reasons.pdf")
+pdf(file="charts/religious_reasons.pdf")
 
 ggplot(data, aes(fill=motivations, y=percent, x=grades)) + 
   geom_bar(position="fill", stat="identity") + 

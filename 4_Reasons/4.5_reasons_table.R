@@ -1,4 +1,5 @@
 # REASONS TABLE
+
 # CREATE a table showing what percent of those who selected each reason for
 # homeschooling also also selected each OTHER reason for homeschooling.
 

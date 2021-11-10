@@ -92,7 +92,7 @@ wpct(numberR2$HSOTHERX, weight=numberR2$FPWT, na.rm=TRUE)
 number <- subset(HOME, HSRELGON==1)
 counts <- (round(wpct(number$numberR, weight=number$FPWT, na.rm=TRUE), digits = 3)*100)
 
-pdf(file="4_Reasons/number_of_reasons_religious.pdf")
+pdf(file="charts/number_of_reasons_religious.pdf")
 barplot(counts, main="Number of reasons given for homeschooling \n (parents with religious reasons for homeschooling)", ylab="percent of respondents")
 dev.off()
 
@@ -100,7 +100,7 @@ dev.off()
 number <- subset(HOME, HSRELGON!=1)
 counts <- (round(wpct(number$numberR, weight=number$FPWT, na.rm=TRUE), digits = 3)*100)
 
-pdf(file="4_Reasons/number_of_reasons_non_religious.pdf")
+pdf(file="charts/number_of_reasons_non_religious.pdf")
 barplot(counts, main="Number of reasons given for homeschooling \n (parents without religious reasons for homeschooling)", ylab="percent of respondents")
 dev.off()
 

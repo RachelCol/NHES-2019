@@ -12,7 +12,6 @@ round(svytable(~ALLGRADEX, HOMEdesign))
 sum(round(svytable(~ALLGRADEX, HOMEdesign)))
 
 # BAR CHART CREATION BY SEGMENT
-
 # GRADE RANGES: K-6, 7-12
 round(svytable(~elementary_secondary, HOMEdesign))
 (round(wpct(HOME$elementary_secondary, weight=HOME$FPWT, na.rm=TRUE), digits = 3)*100)
