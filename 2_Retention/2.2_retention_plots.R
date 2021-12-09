@@ -95,6 +95,54 @@ dev.off()
 
 # -----
 
+# PIE CHART
+
+# get data for pie charts:
+pie_table <- svytable(~grade_range3 + status, HOMEdesign)
+rowSums(pie_table)
+data <- as.data.frame(round(pie_table / rowSums(pie_table), digits = 3)*100)
+data$status <- rep(c('Always homeschooled', 'Multiple years, but not all', 'First-year transfer'), each = 4)
+data$grade_range3 <- rep(c('1st-3rd', '4th-6th', '7th-9th', '10th-12th'), times = 3)
+# set order for plot
+data$grade_range3 <- factor(data$grade_range3,                
+                            levels = c('1st-3rd', '4th-6th', '7th-9th', '10th-12th'))
+data$status <- factor(data$status, 
+                      levels = c('Always homeschooled', 'Multiple years, but not all', 'First-year transfer'))
+
+# run graph - save as file
+pdf(file="charts/length_of_time_homeschooling.pdf")
+ggplot(data=data[order(data$status), ], 
+  aes(x=" ", y=Freq, group=grade_range3, colour=status, fill=status)) +
+  geom_bar(width = 1, stat = "identity") +
+#  coord_polar("y", start=0) + # hash out this line to switch to bar plot
+  facet_grid(.~ grade_range3) + 
+  theme_bw() + 
+  scale_fill_grey() + scale_color_grey() + 
+  labs(title = "Length of time children have been homeschooled,", 
+       subtitle = "by grade range") +
+  theme(plot.title = element_text(size=16), 
+        plot.subtitle = element_text(size = 14)) +
+  theme(legend.position="bottom") +
+  theme(legend.title = element_blank()) +
+  theme(legend.text = element_text(size=12)) +
+  theme(axis.title = element_blank()) +
+#  theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid  = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5), 
+        plot.subtitle = element_text(hjust = 0.5)) 
+dev.off()
+  
+# double checking accuracy by running this another way: 
+part <- subset(HOME, HOME$ALLGRADEX == 1 | HOME$ALLGRADEX == 2 | HOME$ALLGRADEX == 3)
+wpct(part$status, weight=part$FPWT, na.rm=TRUE)
+part <- subset(HOME, HOME$ALLGRADEX == 4 | HOME$ALLGRADEX == 5 | HOME$ALLGRADEX == 6)
+wpct(part$status, weight=part$FPWT, na.rm=TRUE)
+part <- subset(HOME, HOME$ALLGRADEX == 7 | HOME$ALLGRADEX == 8 | HOME$ALLGRADEX == 9)
+wpct(part$status, weight=part$FPWT, na.rm=TRUE)
+part <- subset(HOME, HOME$ALLGRADEX == 10 | HOME$ALLGRADEX == 11 | HOME$ALLGRADEX == 12)
+wpct(part$status, weight=part$FPWT, na.rm=TRUE)
+
+# -----
+
 # WEIGHTED NUMBER OF CHILDREN HOMESCHOOLED IN EACH GRADE 
 # create table, create bar plot with confidence intervals
 

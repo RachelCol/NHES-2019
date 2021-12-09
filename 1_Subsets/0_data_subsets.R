@@ -48,6 +48,7 @@ library("reactable")
 library("reactablefmtr")
 library("webshot2")
 
+# -----
 
 # CREATE DATA FILES
 
@@ -354,6 +355,10 @@ summary(PFIdesign)
 
 HOME <- subset(PFI, SCHTYPE == 3)
 
+# which grades are respondents in?
+table(HOME$ALLGRADEX)
+table(PFI$ALLGRADEX)
+
 # replace NAs with 0 ("child not homeschooled")
 HOME$HOMEKX[is.na(HOME$HOMEKX)] <- 0
 HOME$HOME1[is.na(HOME$HOME1)] <- 0
@@ -409,6 +414,11 @@ HOME$ALWAYS <- ifelse((HOME$TOTAL == (HOME$ALLGRADEX + 1)), 1, 0)
 # Create a new column for first-year homeschooled students
 # 1 = first year homeschooling, 0 = not first year
 HOME$FIRST <- ifelse(HOME$TOTAL == 1, 1, 0)
+
+# Create a new column with three categories:
+# 1 = always homeschooled, 2 = some years homeschooled, 3 = first-year transfer
+HOME$status <- ifelse(HOME$ALWAYS == 1, 1,
+                      ifelse(HOME$FIRST == 1, 3, 2))
 
 # WERE THEY HOMESCHOOLED CONSEQUTIVE YEARS? ADD COLUMNS!
 
